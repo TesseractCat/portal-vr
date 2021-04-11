@@ -1,0 +1,33 @@
+{
+    "name": "VR",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "388f474f-3bd7-4f58-8a2e-11d499830dd3",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "769a50f8-20ec-4f9f-977c-e28043ebce4c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "986426bd-3ad8-4701-b9d2-7214a6c29d8e",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

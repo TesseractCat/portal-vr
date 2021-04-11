@@ -1,25 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering.PostProcessing;
 
 
 public class TouchpadMovement : MonoBehaviour {
 
+    [Header("Movement Properties")]
+    public float speed;
+
+    [Header("Object References")]
     public Transform lookCamera;
     public PostProcessVolume mainVolume;
-
-    public float speed;
+    
     bool onGround = true;
-
     Vector3 currentDir;
     Vector3 lastPos = Vector3.zero;
-
     Transform lastPortal = null;
     
+    Vector2 touchpadAxis = Vector2.zero;
+    
+    public void OnMove(InputAction.CallbackContext context) {
+        touchpadAxis = context.ReadValue<Vector2>();
+        Debug.Log(context.ReadValue<Vector2>());
+    }
+    
     void FixedUpdate () {
-        Vector2 touchpadAxis = InputManager.GetMovementVec2();
-
         if (onGround)
         {
             if (Mathf.Abs(touchpadAxis.magnitude) > 0)
@@ -41,7 +48,7 @@ public class TouchpadMovement : MonoBehaviour {
         }
 
         // Slow down effect
-        if (InputManager.LeftHandGrab())
+        /*if (InputManager.LeftHandGrab())
         {
             Time.timeScale = 0.25f;
             Vignette vignetteLayer;
@@ -54,7 +61,7 @@ public class TouchpadMovement : MonoBehaviour {
             Vignette vignetteLayer;
             mainVolume.profile.TryGetSettings(out vignetteLayer);
             vignetteLayer.active = false;
-        }
+        }*/
 
         //Handle elevation changes and falling
         Ray ray = new Ray(lookCamera.transform.position + Vector3.up/2, -Vector3.up);

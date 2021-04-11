@@ -55,21 +55,22 @@ public class ProcLevelMesh : MonoBehaviour {
         List<Vector3> vertices = new List<Vector3>();
         List<List<int>> triangles = new List<List<int>>();
         List<Vector2> uvs = new List<Vector2>();
+        List<Color> colors = new List<Color>();
 
         for (int i = 0; i < GetComponent<MeshRenderer>().sharedMaterials.Length; i++)
         {
             triangles.Add(new List<int>());
         }
 
-        for (var x = 0; x < levelArr.GetLength(0); x++)
+        for (int x = 0; x < levelArr.GetLength(0); x++)
         {
-            for (var y = 0; y < levelArr.GetLength(0); y++)
+            for (int y = 0; y < levelArr.GetLength(0); y++)
             {
-                for (var z = 0; z < levelArr.GetLength(0); z++)
+                for (int z = 0; z < levelArr.GetLength(0); z++)
                 {
                     if (levelArr[x, y, z] == 1)
                     {
-                        GenArrayIndex(new Vector3(x, y, z), ref vertices, ref triangles, ref uvs);
+                        GenArrayIndex(new Vector3Int(x, y, z), ref vertices, ref triangles, ref uvs, ref colors);
                     }
                 }
             }
@@ -86,23 +87,25 @@ public class ProcLevelMesh : MonoBehaviour {
             filter.mesh.SetTriangles(triangles[i], i);
         }
         filter.mesh.SetUVs(0, uvs);
+        filter.mesh.SetColors(colors);
 
         filter.mesh.RecalculateNormals();
 
         GetComponent<MeshCollider>().sharedMesh = filter.mesh;
     }
 
-    void GenArrayIndex(Vector3 pos, ref List<Vector3> verticesRef, ref List<List<int>> triRef, ref List<Vector2> uvsRef)
+    void GenArrayIndex(Vector3Int pos, ref List<Vector3> verticesRef, ref List<List<int>> triRef, ref List<Vector2> uvsRef, ref List<Color> colorsRef)
     {
-        List<Vector3> OffsetList = new List<Vector3>();
-        OffsetList.Add(new Vector3(1, 0, 0));
-        OffsetList.Add(new Vector3(0, 1, 0));
-        OffsetList.Add(new Vector3(0, 0, 1));
-        OffsetList.Add(new Vector3(-1, 0, 0));
-        OffsetList.Add(new Vector3(0, -1, 0));
-        OffsetList.Add(new Vector3(0, 0, -1));
+        List<Vector3Int> OffsetList = new List<Vector3Int>() {
+            new Vector3Int(1, 0, 0),
+            new Vector3Int(0, 1, 0),
+            new Vector3Int(0, 0, 1),
+            new Vector3Int(-1, 0, 0),
+            new Vector3Int(0, -1, 0),
+            new Vector3Int(0, 0, -1)
+        };
 
-        foreach (Vector3 offset in OffsetList)
+        foreach (Vector3Int offset in OffsetList)
         {
             Vector3 realPos = pos + offset;
 
@@ -113,24 +116,39 @@ public class ProcLevelMesh : MonoBehaviour {
                 if (levelArr[(int) realPos.x, (int)realPos.y, (int)realPos.z] == 0)
                 {
                     //Value is wall
-                    AddQuad(1, realPos - (offset/2), offset, pos, ref verticesRef, ref triRef, ref uvsRef);
+                    AddQuad(1, realPos - (((Vector3)offset)/2), offset, pos, ref verticesRef, ref triRef, ref uvsRef, ref colorsRef);
                 }
             } else
             {
-                //OFFSET THING?
                 //Value is not in array, put a wall
-                AddQuad(1, realPos - (offset/2), offset, pos, ref verticesRef, ref triRef, ref uvsRef);
+                AddQuad(1, realPos - (offset/2), offset, pos, ref verticesRef, ref triRef, ref uvsRef, ref colorsRef);
             }
         }
     }
 
-    void AddQuad(float width, Vector3 position, Vector3 direction, Vector3 gridPos, ref List<Vector3> verticesRef, ref List<List<int>> triRef, ref List<Vector2> uvsRef)
+    void AddQuad(
+            float width, Vector3 position, Vector3Int direction, Vector3Int gridPos,
+            ref List<Vector3> verticesRef, ref List<List<int>> triRef, ref List<Vector2> uvsRef, ref List<Color> colorsRef)
     {
         int wallMaterial = GetWall(gridPos, new Vector3(direction.x, direction.y, -direction.z));
 
         int[] tempQuadTris = new int[6];
         Vector3[] tempQuadNormals = new Vector3[4];
         Vector2[] tempQuadUVs = new Vector2[4];
+        Color[] tempQuadColors = new Color[4];
+        
+        //Colors
+        Vector3 dirCross = (Mathf.Abs(direction.y) == 1 ? Vector3.right : Vector3.Cross(direction, Vector3.up)).normalized;
+        for (int i = 0; i < 4; i++)
+        {
+            Vector3Int aoPos = gridPos + direction + Vec3Round(dirCross);
+            if (levelArr[aoPos.x,aoPos.y,aoPos.z] == 1) {
+                tempQuadColors[i] = Color.black;
+            } else {
+                tempQuadColors[i] = Color.white;
+            }
+            dirCross = Quaternion.AngleAxis(90, direction) * dirCross;
+        }
 
         // Quad verts (based on direction)
         if (vec3abs(direction) == new Vector3(0, 1, 0))
@@ -217,10 +235,22 @@ public class ProcLevelMesh : MonoBehaviour {
         
         triRef[wallMaterial].AddRange(tempQuadTris);
         uvsRef.AddRange(tempQuadUVs);
+        colorsRef.AddRange(tempQuadColors);
+    }
+    
+    int VertexAO(bool side1, bool side2, bool corner) {
+        if (side1 && side2)
+            return 0;
+        return 3 - ((side1 ? 1 : 0) + (side2 ? 1 : 0) + (corner ? 1 : 0));
     }
 
     Vector3 vec3abs(Vector3 vector)
     {
         return new Vector3(Mathf.Abs(vector.x), Mathf.Abs(vector.y), Mathf.Abs(vector.z));
+    }
+    
+    Vector3Int Vec3Round(Vector3 vector)
+    {
+        return new Vector3Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y), Mathf.RoundToInt(vector.z));
     }
 }

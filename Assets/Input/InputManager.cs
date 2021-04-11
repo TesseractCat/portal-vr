@@ -9,7 +9,9 @@ public class InputManager : MonoBehaviour
 {
     public static Vector2 GetMovementVec2()
     {
-        return SquareToCircle(new Vector2(Input.GetAxis("wmr-movement-x"), Input.GetAxis("wmr-movement-y")));
+        //return SteamVR_Input.GetVector2Action("Movement").axis;
+        //return SquareToCircle(new Vector2(Input.GetAxis("wmr-movement-x"), Input.GetAxis("wmr-movement-y")));
+        return Vector2.zero;
     }
 
     static Vector2 SquareToCircle(Vector2 in_vec)
@@ -20,12 +22,22 @@ public class InputManager : MonoBehaviour
 
     public static float GetSelectedPortal()
     {
-        return Input.GetAxisRaw("wmr-portal-touchpad-x");
+        //return Input.GetAxisRaw("wmr-portal-touchpad-x");
+        return 0.0f;
     }
 
-    public static bool PortalShot()
+    public static bool PortalShot1()
     {
-        return Input.GetButtonDown("wmr-portal-touchpad-click");
+        //return SteamVR_Input.GetBooleanAction("Shoot_Portal_1").state;
+        //return Input.GetButtonDown("wmr-portal-touchpad-click");
+        return false;
+    }
+    
+    public static bool PortalShot2()
+    {
+        //return SteamVR_Input.GetBooleanAction("Shoot_Portal_2").state;
+        //return Input.GetButtonDown("wmr-portal-touchpad-click");
+        return false;
     }
 
     public static bool RightHandGrab()
@@ -35,18 +47,21 @@ public class InputManager : MonoBehaviour
 
     public static bool LeftHandGrab()
     {
-        return Input.GetButton("wmr-left-grab");
+        //return Input.GetButton("wmr-left-grab");
+        return false;
     }
 
     public static bool LeftTriggerClick()
     {
-        return Input.GetButtonDown("wmr-left-trigger-click");
+        //return Input.GetButtonDown("wmr-left-trigger-click");
+        return false;
     }
 
 
     public static bool LeftTriggerDown()
     {
-        return Input.GetButton("wmr-left-trigger-click");
+        //return Input.GetButton("wmr-left-trigger-click");
+        return false;
     }
 
     public static void DoHapticPulse(XRNode node)

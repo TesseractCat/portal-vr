@@ -7,6 +7,7 @@
 		_Metallic("Metallic", Range(0,1)) = 0.0
 		[MaterialToggle] _DoEmission("Emission", Float) = 0
 		[HDR] _Emission("Color", Color) = (1, 1, 1, 1)
+        
 		_StencilMask("Stencil Mask", Int) = 0
 		[Enum(UnityEngine.Rendering.CompareFunction)] _StencilComp("Stencil Comp", Int) = 8 //Default Always=8, Equal=3
 	}

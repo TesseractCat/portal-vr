@@ -1,0 +1,208 @@
+fileFormatVersion: 2
+guid: e1ef709b9ef59c6419548738050e7ed1
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: Cube
+    100002: Cube_001
+    100004: Cube_002
+    100006: Cube_003
+    100008: Cube_004
+    100010: Cube_005
+    100012: Cylinder
+    100014: Cylinder_001
+    100016: //RootNode
+    100018: Torus
+    100020: Cylinder_002
+    100022: Camera
+    100024: Cube.001
+    100026: Cube.002
+    100028: Cube.003
+    100030: Cube.004
+    100032: Cube.005
+    100034: Cylinder.001
+    100036: Cylinder.002
+    100038: Lamp
+    400000: Cube
+    400002: Cube_001
+    400004: Cube_002
+    400006: Cube_003
+    400008: Cube_004
+    400010: Cube_005
+    400012: Cylinder
+    400014: Cylinder_001
+    400016: //RootNode
+    400018: Torus
+    400020: Cylinder_002
+    400022: Camera
+    400024: Cube.001
+    400026: Cube.002
+    400028: Cube.003
+    400030: Cube.004
+    400032: Cube.005
+    400034: Cylinder.001
+    400036: Cylinder.002
+    400038: Lamp
+    2100000: Border
+    2100002: LaserRing
+    2100004: LaserRingInside
+    2100006: Glass
+    2300000: Cube
+    2300002: Cube_001
+    2300004: Cube_002
+    2300006: Cube_003
+    2300008: Cube_004
+    2300010: Cube_005
+    2300012: Cylinder
+    2300014: Cylinder_001
+    2300016: Torus
+    2300018: Cylinder_002
+    2300020: Cube.001
+    2300022: Cube.002
+    2300024: Cube.003
+    2300026: Cube.004
+    2300028: Cube.005
+    2300030: Cylinder.001
+    2300032: Cylinder.002
+    3300000: Cube
+    3300002: Cube_001
+    3300004: Cube_002
+    3300006: Cube_003
+    3300008: Cube_004
+    3300010: Cube_005
+    3300012: Cylinder
+    3300014: Cylinder_001
+    3300016: Torus
+    3300018: Cylinder_002
+    3300020: Cube.001
+    3300022: Cube.002
+    3300024: Cube.003
+    3300026: Cube.004
+    3300028: Cube.005
+    3300030: Cylinder.001
+    3300032: Cylinder.002
+    4300000: Cube_005
+    4300002: Cube_004
+    4300004: Cube_001
+    4300006: Cube
+    4300008: Cylinder_001
+    4300010: Cylinder
+    4300012: Torus
+    4300014: Cube_003
+    4300016: Cube_002
+    4300018: Cylinder_002
+    4300020: Cylinder.002
+    4300022: Cube.005
+    4300024: Cube.004
+    4300026: Cube.001
+    4300028: Cylinder.001
+    4300030: Cube.003
+    4300032: Cube.002
+    7400000: Default Take
+    9500000: //RootNode
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Border
+    second: {fileID: 2100000, guid: 40caef5b6e46de04e96be93d5babb333, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Glass
+    second: {fileID: 2100000, guid: 0d48959bd0de7634bbe4a0a091a99e8c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LaserRing
+    second: {fileID: 2100000, guid: 1b1d26a278f6d044697b734318a94903, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LaserRingInside
+    second: {fileID: 2100000, guid: a7793d5181dd3ab4e99af0880dd7d555, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.2
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 1
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
