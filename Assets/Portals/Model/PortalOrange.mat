@@ -4,8 +4,9 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: PortalOrange
   m_Shader: {fileID: 4800000, guid: bb39455c9e3a7104a9046f783c52114d, type: 3}
   m_ShaderKeywords: _ALPHABLEND_ON _DOEMISSION_ON _EMISSION
@@ -78,3 +79,4 @@ Material:
     - _Color: {r: 1, g: 0.51724136, b: 0, a: 1}
     - _Emission: {r: 1, g: 0.16484332, b: 0, a: 1}
     - _EmissionColor: {r: 1.0588236, g: 0.72156864, b: 0, a: 1}
+  m_BuildTextureStacks: []

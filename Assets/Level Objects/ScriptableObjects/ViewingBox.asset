@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46c5593a3c034984180078eaa703f2e6, type: 3}
+  m_Name: ViewingBox
+  m_EditorClassIdentifier: 
+  label: Viewing Box
+  objectPrefab: {fileID: 357906446103024784, guid: 9f3e9b64ac072414a901bb586ded330a,
+    type: 3}
+  visualPrefab: {fileID: 357906446103024784, guid: 9f3e9b64ac072414a901bb586ded330a,
+    type: 3}
+  canPlaceOnWalls: 1
+  canPlaceOnGround: 0
+  maxOne: 0
+  excludeWall: 0
+  decoration: 1

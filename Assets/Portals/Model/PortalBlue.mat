@@ -4,8 +4,9 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: PortalBlue
   m_Shader: {fileID: 4800000, guid: bb39455c9e3a7104a9046f783c52114d, type: 3}
   m_ShaderKeywords: _ALPHABLEND_ON _DOEMISSION_ON _EMISSION _GLOSSYREFLECTIONS_OFF
@@ -79,3 +80,4 @@ Material:
     - _Color: {r: 0.4198113, g: 0.8326378, b: 1, a: 1}
     - _Emission: {r: 0, g: 0.2333653, b: 1, a: 1}
     - _EmissionColor: {r: 0.48584908, g: 0.60682565, b: 1, a: 1}
+  m_BuildTextureStacks: []

@@ -2,255 +2,180 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-
-#region Tuple Definition
-public struct Tuple<T1, T2>
-{
-    public readonly T1 Item1;
-    public readonly T2 Item2;
-    public Tuple(T1 item1, T2 item2) { Item1 = item1; Item2 = item2; }
-}
-#endregion
+using Newtonsoft.Json;
 
 public class ProcLevelMesh : MonoBehaviour {
-
     MeshFilter filter;
-
-    //The level will be represented by a 3 dim array. A value of 1 means the area is empty, and a value of 0 means it is solid.
-    //All lengths should be the same
+    
+    public bool generateOnStart = true;
+    
+    [System.NonSerialized]
     public int[,,] levelArr = new int[100, 100, 100];
-    //The walls will be in a dict with a vector3 that shows the grid position and a directional Vector3 that shows the side
-    public Dictionary<Tuple<Vector3, Vector3>, int> wallDict = new Dictionary<Tuple<Vector3, Vector3>, int>();
-
-    int GetWall(Vector3 pos, Vector3 side)
-    {
-        if (wallDict.ContainsKey(new Tuple<Vector3, Vector3>(pos, side)))
-        {
-            return wallDict[new Tuple<Vector3, Vector3>(pos, side)];
-        } else
-        {
-            return 0;
+    [System.NonSerialized]
+    public Dictionary<Vector3Int, Vector3Int> excludedWalls;
+    
+    List<Vector3> vertices = new List<Vector3>();
+    List<Vector3> normals = new List<Vector3>();
+    List<List<int>> triangles = new List<List<int>>();
+    List<Vector2> uvs = new List<Vector2>();
+    List<Color> colors = new List<Color>();
+    
+    void Start() {
+        //Reset portal holes
+        foreach (Material m in GetComponent<Renderer>().sharedMaterials) {
+            for (int i = 1; i <= 2; i++) {
+                m.SetVector("_PortalPos" + (i).ToString(), new Vector3(1000, 1000, 1000));
+                m.SetVector("_PortalRot" + (i).ToString(), Vector4.zero);
+            }
         }
-    }
-
-	void Start () {
+        
         filter = GetComponent<MeshFilter>();
         filter.mesh = new Mesh();
-        for (var x = 45; x < 55; x++)
-        {
-            for (var y = 45; y < 50; y++)
-            {
-                for (var z = 45; z < 55; z++)
-                {
-                    levelArr[x, y, z] = 1;
+        
+        //Set up array
+        ClearLevel();
+        
+        //Generate mesh
+        if (generateOnStart)
+            Generate();
+    }
+    
+    public void ClearLevel() {
+        excludedWalls = new Dictionary<Vector3Int, Vector3Int>();
+        
+        for (int x = 0; x < levelArr.GetLength(0); x++) {
+            for (int y = 0; y < levelArr.GetLength(1); y++) {
+                for (int z = 0; z < levelArr.GetLength(2); z++) {
+                    levelArr[x,y,z] = 1;
                 }
             }
         }
-        wallDict[new Tuple<Vector3, Vector3>(new Vector3(45, 45, 45), -Vector3.up)] = 0;
-        Generate();
-	}
-
-    public void Generate()
-    {
-        List<Vector3> vertices = new List<Vector3>();
-        List<List<int>> triangles = new List<List<int>>();
-        List<Vector2> uvs = new List<Vector2>();
-        List<Color> colors = new List<Color>();
-
-        for (int i = 0; i < GetComponent<MeshRenderer>().sharedMaterials.Length; i++)
-        {
-            triangles.Add(new List<int>());
+        
+        for (int x = 40; x < 60; x++) {
+            for (int y = 40; y < 50; y++) {
+                for (int z = 40; z < 60; z++) {
+                    levelArr[x,y,z] = 0;
+                }
+            }
         }
-
-        for (int x = 0; x < levelArr.GetLength(0); x++)
-        {
-            for (int y = 0; y < levelArr.GetLength(0); y++)
-            {
-                for (int z = 0; z < levelArr.GetLength(0); z++)
-                {
-                    if (levelArr[x, y, z] == 1)
-                    {
-                        GenArrayIndex(new Vector3Int(x, y, z), ref vertices, ref triangles, ref uvs, ref colors);
+    }
+    
+    public void Generate() {
+        vertices = new List<Vector3>();
+        normals = new List<Vector3>();
+        triangles = new List<List<int>>();
+        triangles.Add(new List<int>());
+        triangles.Add(new List<int>());
+        
+        uvs = new List<Vector2>();
+        colors = new List<Color>();
+    
+        //Do generation!
+        for (int x = 0; x < levelArr.GetLength(0); x++) {
+            for (int y = 0; y < levelArr.GetLength(1); y++) {
+                for (int z = 0; z < levelArr.GetLength(2); z++) {
+                    //If levelArr[x,y,z] is empty
+                    if (levelArr[x,y,z] == 0) {
+                        AddEmpty(new Vector3Int(x,y,z));
                     }
                 }
             }
         }
 
-
+        //Clear mesh
         filter.mesh.Clear();
         filter.mesh.subMeshCount = GetComponent<MeshRenderer>().sharedMaterials.Length;
-
+        
+        //Set filter.mesh properties
         filter.mesh.SetVertices(vertices);
+        filter.mesh.SetNormals(normals);
         for (int i = 0; i < GetComponent<MeshRenderer>().sharedMaterials.Length; i++)
         {
-            Debug.Log(i);
             filter.mesh.SetTriangles(triangles[i], i);
+            //filter.mesh.SetTriangles(triangles[0], 0);
         }
         filter.mesh.SetUVs(0, uvs);
         filter.mesh.SetColors(colors);
-
-        filter.mesh.RecalculateNormals();
-
+        
+        //Update collider
         GetComponent<MeshCollider>().sharedMesh = filter.mesh;
     }
-
-    void GenArrayIndex(Vector3Int pos, ref List<Vector3> verticesRef, ref List<List<int>> triRef, ref List<Vector2> uvsRef, ref List<Color> colorsRef)
-    {
-        List<Vector3Int> OffsetList = new List<Vector3Int>() {
-            new Vector3Int(1, 0, 0),
-            new Vector3Int(0, 1, 0),
-            new Vector3Int(0, 0, 1),
-            new Vector3Int(-1, 0, 0),
-            new Vector3Int(0, -1, 0),
-            new Vector3Int(0, 0, -1)
+    
+    void AddEmpty(Vector3Int pos) {
+        List<Vector3Int> directions = new List<Vector3Int>() {
+            Vector3Int.up,
+            -Vector3Int.up,
+            Vector3Int.right,
+            -Vector3Int.right,
+            Vector3Int.forward,
+            -Vector3Int.forward,
         };
-
-        foreach (Vector3Int offset in OffsetList)
-        {
-            Vector3 realPos = pos + offset;
-
-            //If value in array
-            if ((int) realPos.x < levelArr.GetLength(0) && (int) realPos.y < levelArr.GetLength(0) && (int) realPos.z < levelArr.GetLength(0)
-                && (int) realPos.x >= 0 && (int) realPos.y >= 0 && (int) realPos.z >= 0)
-            {
-                if (levelArr[(int) realPos.x, (int)realPos.y, (int)realPos.z] == 0)
-                {
-                    //Value is wall
-                    AddQuad(1, realPos - (((Vector3)offset)/2), offset, pos, ref verticesRef, ref triRef, ref uvsRef, ref colorsRef);
-                }
-            } else
-            {
-                //Value is not in array, put a wall
-                AddQuad(1, realPos - (offset/2), offset, pos, ref verticesRef, ref triRef, ref uvsRef, ref colorsRef);
+        
+        foreach (Vector3Int d in directions) {
+            Vector3Int offsetPos = pos + d;
+            
+            //Out of bounds
+            if (offsetPos.x < 0 || offsetPos.y < 0 || offsetPos.z < 0 ||
+                    offsetPos.x >= levelArr.GetLength(0) ||
+                    offsetPos.y >= levelArr.GetLength(1) ||
+                    offsetPos.z >= levelArr.GetLength(2)) {
+                AddQuad(offsetPos, -d, 0);
+                continue;
+            }
+            
+            //There is a filled voxel next to this empty voxel
+            if (levelArr[offsetPos.x, offsetPos.y, offsetPos.z] != 0) {
+                //Lets add a quad, facing the opposite direction as the offset
+                AddQuad(offsetPos, -d, levelArr[offsetPos.x, offsetPos.y, offsetPos.z] - 1);
             }
         }
     }
-
-    void AddQuad(
-            float width, Vector3 position, Vector3Int direction, Vector3Int gridPos,
-            ref List<Vector3> verticesRef, ref List<List<int>> triRef, ref List<Vector2> uvsRef, ref List<Color> colorsRef)
-    {
-        int wallMaterial = GetWall(gridPos, new Vector3(direction.x, direction.y, -direction.z));
-
-        int[] tempQuadTris = new int[6];
-        Vector3[] tempQuadNormals = new Vector3[4];
-        Vector2[] tempQuadUVs = new Vector2[4];
-        Color[] tempQuadColors = new Color[4];
+    
+    void AddQuad(Vector3Int pos, Vector3Int normal, int material) {
+        //If wall is excluded (i.e. a door will be on this wall) do nothing
+        if (excludedWalls.ContainsKey(pos) && excludedWalls[pos] == normal)
+            return;
         
-        //Colors
-        Vector3 dirCross = (Mathf.Abs(direction.y) == 1 ? Vector3.right : Vector3.Cross(direction, Vector3.up)).normalized;
-        for (int i = 0; i < 4; i++)
+        Vector3[] tempVertices = new Vector3[4] {
+            new Vector3(-0.5f, -0.5f, 0.0f), //BOTTOM LEFT
+            new Vector3(0.5f, -0.5f, 0.0f), //BOTTOM RIGHT
+            new Vector3(-0.5f, 0.5f, 0.0f), //TOP LEFT
+            new Vector3(0.5f, 0.5f, 0.0f) //TOP RIGHT
+        };
+        int[] tempTriangles = new int[6] {
+            0,2,1,
+            2,3,1
+        };
+        Vector2[] tempWallUvs = new Vector2[4]
         {
-            Vector3Int aoPos = gridPos + direction + Vec3Round(dirCross);
-            if (levelArr[aoPos.x,aoPos.y,aoPos.z] == 1) {
-                tempQuadColors[i] = Color.black;
+            new Vector2(0, 0),
+            new Vector2(0.5f, 0),
+            new Vector2(0, 1),
+            new Vector2(0.5f, 1)
+        };
+        Vector2[] tempGroundUvs = new Vector2[4]
+        {
+            new Vector2(0.5f, 0),
+            new Vector2(1, 0),
+            new Vector2(0.5f, 1),
+            new Vector2(1, 1)
+        };
+        
+        Vector3 center = ((Vector3)pos) + ((Vector3)normal)/2.0f;
+        Quaternion rotation = Quaternion.LookRotation(-normal, Vector3.up);
+        
+        for (int i = 0; i < tempTriangles.Length; i++) {
+            triangles[material].Add(tempTriangles[i] + vertices.Count);
+        }
+        for (int i = 0; i < 4; i++) {
+            vertices.Add((rotation * tempVertices[i]) + center);
+            normals.Add(normal);
+            if (Mathf.Abs(normal.y) == 1) {
+                uvs.Add(tempGroundUvs[i]);
             } else {
-                tempQuadColors[i] = Color.white;
+                uvs.Add(tempWallUvs[i]);
             }
-            dirCross = Quaternion.AngleAxis(90, direction) * dirCross;
+            colors.Add(Color.white);
         }
-
-        // Quad verts (based on direction)
-        if (vec3abs(direction) == new Vector3(0, 1, 0))
-        {
-            //Up
-            verticesRef.Add(new Vector3(-width / 2, 0, -width / 2));
-            verticesRef.Add(new Vector3(width / 2, 0, -width / 2));
-            verticesRef.Add(new Vector3(-width / 2, 0, width / 2));
-            verticesRef.Add(new Vector3(width/2, 0, width/2));
-
-            //Fix direction issue
-            direction = -direction;
-        } else if (vec3abs(direction) == new Vector3(0, 0, 1))
-        {
-            //Forward
-            verticesRef.Add(new Vector3(-width / 2, -width / 2, 0));
-            verticesRef.Add(new Vector3(width / 2, -width / 2, 0));
-            verticesRef.Add(new Vector3(-width / 2, width / 2, 0));
-            verticesRef.Add(new Vector3(width / 2, width / 2, 0));
-        } else if (vec3abs(direction) == new Vector3(1, 0, 0))
-        {
-            //Side
-            verticesRef.Add(new Vector3(0, -width / 2, -width / 2));
-            verticesRef.Add(new Vector3(0, -width / 2, width / 2));
-            verticesRef.Add(new Vector3(0, width / 2, -width / 2));
-            verticesRef.Add(new Vector3(0, width / 2, width / 2));
-
-            //Fix direction issue
-            direction = -direction;
-        }
-
-        // Add position
-        for (int i = 0; i < 4; i++)
-        {
-            verticesRef[verticesRef.Count-4+i] += position;
-        }
-
-        if ((direction.x + direction.y + direction.z) > 0)
-        {
-            //  Lower left triangle.
-            tempQuadTris[0] = (verticesRef.Count - 4) + 0;
-            tempQuadTris[1] = (verticesRef.Count - 4) + 2;
-            tempQuadTris[2] = (verticesRef.Count - 4) + 1;
-
-            //  Upper right triangle.   
-            tempQuadTris[3] = (verticesRef.Count - 4) + 2;
-            tempQuadTris[4] = (verticesRef.Count - 4) + 3;
-            tempQuadTris[5] = (verticesRef.Count - 4) + 1;
-        } else if ((direction.x + direction.y + direction.z) < 0)
-        {
-            //  Lower left triangle.
-            tempQuadTris[0] = (verticesRef.Count - 4) + 1;
-            tempQuadTris[1] = (verticesRef.Count - 4) + 2;
-            tempQuadTris[2] = (verticesRef.Count - 4) + 0;
-
-            //  Upper right triangle.   
-            tempQuadTris[3] = (verticesRef.Count - 4) + 1;
-            tempQuadTris[4] = (verticesRef.Count - 4) + 3;
-            tempQuadTris[5] = (verticesRef.Count - 4) + 2;
-        }
-
-        // Normals
-        tempQuadNormals[0] = -Vector3.forward;
-        tempQuadNormals[1] = -Vector3.forward;
-        tempQuadNormals[2] = -Vector3.forward;
-        tempQuadNormals[3] = -Vector3.forward;
-
-        // UVs
-        if (vec3abs(direction) == new Vector3(0, 1, 0))
-        {
-            //Floor or ceiling
-            tempQuadUVs[0] = new Vector2(0.5f, 0);
-            tempQuadUVs[1] = new Vector2(1, 0);
-            tempQuadUVs[2] = new Vector2(0.5f, 0.5f);
-            tempQuadUVs[3] = new Vector2(1, 0.5f);
-        } else
-        {
-            //Wall
-            tempQuadUVs[0] = new Vector2(0, 0);
-            tempQuadUVs[1] = new Vector2(0.5f, 0);
-            tempQuadUVs[2] = new Vector2(0, 0.5f);
-            tempQuadUVs[3] = new Vector2(0.5f, 0.5f);
-        }
-        
-        triRef[wallMaterial].AddRange(tempQuadTris);
-        uvsRef.AddRange(tempQuadUVs);
-        colorsRef.AddRange(tempQuadColors);
-    }
-    
-    int VertexAO(bool side1, bool side2, bool corner) {
-        if (side1 && side2)
-            return 0;
-        return 3 - ((side1 ? 1 : 0) + (side2 ? 1 : 0) + (corner ? 1 : 0));
-    }
-
-    Vector3 vec3abs(Vector3 vector)
-    {
-        return new Vector3(Mathf.Abs(vector.x), Mathf.Abs(vector.y), Mathf.Abs(vector.z));
-    }
-    
-    Vector3Int Vec3Round(Vector3 vector)
-    {
-        return new Vector3Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y), Mathf.RoundToInt(vector.z));
     }
 }

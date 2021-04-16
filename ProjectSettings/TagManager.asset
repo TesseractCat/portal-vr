@@ -12,7 +12,8 @@ TagManager:
   - DontClone
   - NoColl
   - PortalColl
-  - Glove
+  - Zone
+  - Hand
   layers:
   - Default
   - TransparentFX
@@ -22,12 +23,12 @@ TagManager:
   - UI
   - 
   - 
-  - StereoRender_Ignore
-  - PortalEdgeLayer
+  - 
+  - 
   - PortalTrigLayer
   - PortalFrameLayer
   - Ground
-  - PortalGenCollider
+  - 
   - VRUI
   - Portal1LightMask
   - Portal2LightMask

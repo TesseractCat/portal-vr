@@ -135,8 +135,8 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.036
     - _ParallaxStrength: 1
-    - _PortalTime1: 37.08404
-    - _PortalTime2: 46.845863
+    - _PortalTime1: 33.21005
+    - _PortalTime2: 2.6229675
     - _Shininess: 0.119
     - _SideScale: 0.2
     - _Smoothness: 0.1

@@ -54,7 +54,7 @@ public class DuplicateLevelObjects : MonoBehaviour {
                 duplicateLevelObjects[toDuplicate].GetComponent<SetStencilMask>().stencilMask = duplicateIndex + 1;
                 duplicateLevelObjects[toDuplicate].GetComponent<SetStencilMask>().changeStencilComp = true;
                 
-                duplicateLevelObjects[toDuplicate].AddComponent<DuplicateObjectPortalIntersectHandler>();
+                //duplicateLevelObjects[toDuplicate].AddComponent<DuplicateObjectPortalIntersectHandler>();
                 
                 //Recursively set layers
                 int layer = LayerMask.NameToLayer("Portal" + (duplicateIndex + 1).ToString() + "LightMask");

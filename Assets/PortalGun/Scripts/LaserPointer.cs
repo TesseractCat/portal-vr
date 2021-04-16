@@ -14,13 +14,13 @@ public class LaserPointer : MonoBehaviour {
 
     void Update()
     {
-        Ray ray = new Ray(transform.parent.position, transform.parent.forward);
+        /*Ray ray = new Ray(transform.parent.position, transform.parent.forward);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, hit.point);
-        }
+        }*/
     }
 
     void LateUpdate()

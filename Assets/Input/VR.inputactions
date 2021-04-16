@@ -3,12 +3,92 @@
     "maps": [
         {
             "name": "Player",
-            "id": "388f474f-3bd7-4f58-8a2e-11d499830dd3",
+            "id": "1fb33ec6-a71d-4c0f-b11c-9de59e4f7873",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Movement",
+                    "type": "Value",
+                    "id": "c3dee4f2-3fe6-4123-a038-a6982cbaa87c",
+                    "expectedControlType": "Vector2",
+                    "processors": "StickDeadzone",
+                    "interactions": ""
+                },
+                {
+                    "name": "Portal 1",
                     "type": "Button",
-                    "id": "769a50f8-20ec-4f9f-977c-e28043ebce4c",
+                    "id": "e3eefaf0-9151-4efd-b475-6af78b4ba8b9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Portal 2",
+                    "type": "Button",
+                    "id": "1695b686-594b-4b82-ad68-d67458c12a00",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Laser",
+                    "type": "Button",
+                    "id": "26a497b8-56a2-49d0-92b0-d06ded9a40b9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Grab",
+                    "type": "Button",
+                    "id": "6b8b6e8b-e48f-4b28-a909-3073ebd887ce",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Menu",
+                    "type": "Button",
+                    "id": "c65d26cb-18ce-47e6-ab94-e54e05a479a0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Left Hand Position",
+                    "type": "Value",
+                    "id": "aa391666-dfd0-4511-a4e2-70ac89814541",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Right Hand Position",
+                    "type": "Value",
+                    "id": "2cc538c0-4169-4750-9f0f-9be6bf46e167",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Left Hand Rotation",
+                    "type": "Value",
+                    "id": "775a6bca-007d-45a2-882b-5b1ceb772eae",
+                    "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Right Hand Rotation",
+                    "type": "Value",
+                    "id": "a032e1d4-fb74-4474-9ad4-aac51d1fc2d2",
+                    "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Activate",
+                    "type": "Button",
+                    "id": "d344ebca-f3a3-4785-add3-7a88c4df064e",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -17,12 +97,122 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "986426bd-3ad8-4701-b9d2-7214a6c29d8e",
-                    "path": "",
+                    "id": "a5f3ab1b-b093-40b9-b69a-4d14637bc3ca",
+                    "path": "<WMRSpatialController>{LeftHand}/joystick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "61b86c9c-b434-4722-aae4-8e3cefa9cf45",
+                    "path": "<WMRSpatialController>{RightHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Portal 1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6091f436-7ce3-427a-95ab-1802dcaf455d",
+                    "path": "<WMRSpatialController>{RightHand}/touchpadClicked",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Portal 2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "03fcd7b6-c8bd-42af-bd0f-b846a6a5a5b5",
+                    "path": "<XRController>{LeftHand}/devicePosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Left Hand Position",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e73b4863-8891-4d57-bc9b-7ab92b91ab68",
+                    "path": "<XRController>{RightHand}/devicePosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Right Hand Position",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "430177e3-f422-4091-ba6c-7840877a867d",
+                    "path": "<XRController>{LeftHand}/deviceRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Left Hand Rotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4e1e75be-8980-427f-859a-963d66b44e3c",
+                    "path": "<XRController>{RightHand}/deviceRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Right Hand Rotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7f48669c-6b60-4894-98e2-eea1b3af41e2",
+                    "path": "<WMRSpatialController>{RightHand}/gripPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Grab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "39801fac-0503-4c9d-9ecc-bb20e3139a6a",
+                    "path": "<WMRSpatialController>/menu",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fa1b1977-8363-4da6-8aa3-a9f8921de070",
+                    "path": "<WMRSpatialController>/touchpadTouched",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Laser",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6d81083b-f47d-4701-8d5a-8ff4b667c468",
+                    "path": "<WMRSpatialController>{LeftHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Activate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

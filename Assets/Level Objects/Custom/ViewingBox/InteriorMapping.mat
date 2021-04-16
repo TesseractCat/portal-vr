@@ -4,8 +4,9 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: InteriorMapping
   m_Shader: {fileID: 4800000, guid: ecf8e959444676b4cb527fc07b3da3dc, type: 3}
   m_ShaderKeywords: 
@@ -87,3 +88,4 @@ Material:
     - _ColorWall: {r: 0.2787914, g: 0.31822243, b: 0.3301887, a: 1}
     - _ColorWall2: {r: 0.28915986, g: 0.3584906, b: 0.34934416, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+  m_BuildTextureStacks: []

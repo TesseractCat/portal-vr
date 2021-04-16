@@ -5,8 +5,9 @@
 		_BumpMap("Normal Map", 2D) = "bump" {}
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
+        
 		_PlanePos ("Plane Position", Vector) = (0,0,0)
-		_PlaneDir ("Plane Direction (Euler)", Vector) = (0,0,0)
+		_PlaneDir ("Plane Direction (Normal)", Vector) = (0,0,0)
         
 		_PortalPos1 ("Portal 1 Position", Vector) = (0,0,0)
 		_PortalRot1 ("Portal 1 Rotation", Vector) = (0,0,0)
@@ -110,7 +111,7 @@
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 
-			if (dot(IN.worldPos.xyz - (_PlanePos.xyz + _PlaneDir.xyz/10.0), _PlaneDir.xyz) > 0)
+			if (dot(IN.worldPos.xyz - (_PlanePos.xyz + _PlaneDir.xyz/1000.0), _PlaneDir.xyz) > 0)
 				discard;
             
             if (discardOval(IN.worldPos.xyz, _PortalPos1, _PortalRot1.xy, smoothstep(0.0, 0.5, _Time.y - _PortalTime1) * 0.5))

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Look : MonoBehaviour
 {
@@ -27,13 +28,15 @@ public class Look : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        var mouse = Mouse.current;
+        
         if (Cursor.visible) {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
         
-        float mouseX = Input.GetAxis("Mouse X");
-        float mouseY = Input.GetAxis("Mouse Y");
+        float mouseX = mouse.delta.x.ReadValue();
+        float mouseY = mouse.delta.y.ReadValue();
         
         transform.Rotate(-mouseY * baseSensitivity, 0, 0);
         body.Rotate(0, mouseX * baseSensitivity, 0);

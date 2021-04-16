@@ -5,11 +5,20 @@ using UnityEngine;
 public class HandleHeadCollider : MonoBehaviour {
 
     public Transform headCollider;
+    
+    IEnumerator enableCoroutine;
+    
+    void OnCollisionEnter(Collision c)
+    {
+        Debug.Log("HEAD COLLISION!");
+    }
 
     void OnTriggerEnter(Collider c)
     {
         if (c.tag == "PortalColl")
         {
+            if (enableCoroutine != null)
+                StopCoroutine(enableCoroutine);
             headCollider.GetComponent<Collider>().isTrigger = true;
         }
     }
@@ -18,8 +27,14 @@ public class HandleHeadCollider : MonoBehaviour {
     {
         if (c.tag == "PortalColl")
         {
-            headCollider.GetComponent<Collider>().isTrigger = false;
+            enableCoroutine = EnableHeadCollider();
+            StartCoroutine(enableCoroutine);
         }
+    }
+    
+    IEnumerator EnableHeadCollider() {
+        yield return new WaitForSeconds(0.1f);
+        headCollider.GetComponent<Collider>().isTrigger = false;
     }
 
     void Update()

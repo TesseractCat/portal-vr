@@ -13,6 +13,7 @@ public class TouchpadMovement : MonoBehaviour {
     [Header("Object References")]
     public Transform lookCamera;
     public PostProcessVolume mainVolume;
+    public InputActionReference movementAction;
     
     bool onGround = true;
     Vector3 currentDir;
@@ -21,12 +22,13 @@ public class TouchpadMovement : MonoBehaviour {
     
     Vector2 touchpadAxis = Vector2.zero;
     
-    public void OnMove(InputAction.CallbackContext context) {
-        touchpadAxis = context.ReadValue<Vector2>();
-        Debug.Log(context.ReadValue<Vector2>());
-    }
+    //public void OnMove(InputAction.CallbackContext context) {
+    //    touchpadAxis = context.ReadValue<Vector2>();
+    //}
     
     void FixedUpdate () {
+        touchpadAxis = movementAction.action.ReadValue<Vector2>();
+        
         if (onGround)
         {
             if (Mathf.Abs(touchpadAxis.magnitude) > 0)

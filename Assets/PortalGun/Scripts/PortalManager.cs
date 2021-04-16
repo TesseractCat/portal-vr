@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PortalManager : MonoBehaviour {
 
@@ -12,31 +13,40 @@ public class PortalManager : MonoBehaviour {
     
     public GameObject[] portals = new GameObject[2];
     
-    GameObject[] levelDuplicates = new GameObject[2];
+    [System.NonSerialized]
+    public UnityEvent portalsLinkedEvent = new UnityEvent();
+    
+    [System.NonSerialized]
+    public GameObject[] levelDuplicates = new GameObject[2];
     
     void Start() {
-        //Handle level holes
-        foreach (Material m in mapParent.GetComponent<Renderer>().sharedMaterials) {
-            for (int i = 1; i <= 2; i++) {
-                m.SetVector("_PortalPos" + (i).ToString(), new Vector3(1000, 1000, 1000));
-                m.SetVector("_PortalRot" + (i).ToString(), Vector4.zero);
-            }
-        }
+        
     }
     
     public void ShootPortal(Vector3 position, Vector3 direction, int portal, float rotY) {
-        Debug.Log("Portal shot!");
         Debug.Assert(portal == 0 || portal == 1);
         
         InputManager.DoHapticPulse(UnityEngine.XR.XRNode.RightHand);
         
         //Raycast to create portal
         RaycastHit hit;
-        var layerMask = LayerMask.GetMask("Ground");
+        int layerMask = LayerMask.GetMask("Ground", "PortalTrigLayer");
         if (Physics.Raycast(position, direction, out hit, Mathf.Infinity, layerMask))
         {
+            //Prevent shooting a portal on another portal
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("PortalTrigLayer")
+                    && hit.collider.transform.parent.gameObject != portals[portal]) {
+                //Could shoot a portal through a portal here
+                return;
+            } else if (hit.collider.gameObject.layer == LayerMask.NameToLayer("PortalTrigLayer") &&
+                    hit.collider.transform.parent.gameObject == portals[portal]) {
+                layerMask = LayerMask.GetMask("Ground");
+                if (!Physics.Raycast(position, direction, out hit, Mathf.Infinity, layerMask)) {
+                    return;
+                }
+            }
+            
             //Hit detected, create the portal
-            Debug.Log("Hit point");
             
             //Create portal projectile
             //Instantiate(portalProjectile, transform.position, Quaternion.LookRotation(transform.forward));
@@ -57,18 +67,21 @@ public class PortalManager : MonoBehaviour {
                 
                 Transform tempDuplicate = (Transform)Instantiate(GameObject.FindObjectOfType<ProcLevelMesh>().transform);
                 //Remove unnessecary components
-                Destroy(tempDuplicate.GetComponent<LevelEditor>());
                 Destroy(tempDuplicate.GetComponent<Collider>());
                 Destroy(tempDuplicate.GetComponent<ProcLevelMesh>());
                 
-                //Set up shader stenciling
                 tempDuplicate.parent = tempDuplicateParent.transform;
-                tempDuplicate.GetComponent<Renderer>().material.SetInt("_StencilMask", portal + 1);
-                tempDuplicate.GetComponent<Renderer>().material.SetInt("_StencilComp", 3);
-                tempDuplicate.GetComponent<Renderer>().material.renderQueue = 2010;
-                
-                //Set up lighting layers
-                tempDuplicate.gameObject.layer = LayerMask.NameToLayer("Portal" + (portal + 1).ToString() + "LightMask");
+                foreach (Renderer r in tempDuplicate.GetComponentsInChildren<Renderer>()) {
+                    foreach (Material m in r.materials) {
+                        //Set up shader stenciling
+                        m.SetInt("_StencilMask", portal + 1);
+                        m.SetInt("_StencilComp", 3);
+                        m.renderQueue = 2010;
+                    }
+                    
+                    //Set up lighting layers
+                    r.gameObject.layer = LayerMask.NameToLayer("Portal" + (portal + 1).ToString() + "LightMask");
+                }
                 
                 Light[] tempLights = tempDuplicate.gameObject.GetComponentsInChildren<Light>();
                 foreach (Light l in tempLights)
@@ -83,15 +96,10 @@ public class PortalManager : MonoBehaviour {
                 portals[portal].transform.rotation = Quaternion.LookRotation(-hit.normal);
                 tempPortal = portals[portal];
             }
-                
-            //Handle level holes
-            foreach (Material m in mapParent.GetComponent<Renderer>().sharedMaterials) {
-                m.SetVector("_PortalPos" + (portal + 1).ToString(), portals[portal].transform.position);
-                Vector4 rot = new Vector4(Mathf.Deg2Rad*(portals[portal].transform.localRotation.eulerAngles.x),
-                        Mathf.Deg2Rad*(-portals[portal].transform.rotation.eulerAngles.y), 0, 0);
-                m.SetVector("_PortalRot" + (portal + 1).ToString(), rot);
-                m.SetFloat("_PortalTime" + (portal + 1).ToString(), Time.timeSinceLevelLoad);
-            }
+            
+            //Fix portal placement
+            FixOverhangs(portals[portal].transform);
+            FixIntersections(portals[portal].transform);
             
             //Only allow portal rotation on the ground
             if (hit.normal == new Vector3(0, 1, 0) || hit.normal == new Vector3(0, -1, 0))
@@ -99,6 +107,15 @@ public class PortalManager : MonoBehaviour {
                 Vector3 tempRot = portals[portal].transform.localRotation.eulerAngles;
                 tempRot.y = rotY;
                 portals[portal].transform.rotation = Quaternion.Euler(tempRot);
+            }
+                
+            //Handle level holes
+            Vector4 rot = new Vector4(Mathf.Deg2Rad*(portals[portal].transform.localRotation.eulerAngles.x),
+                    Mathf.Deg2Rad*(-portals[portal].transform.rotation.eulerAngles.y), 0, 0);
+            foreach (Material m in mapParent.GetComponent<Renderer>().sharedMaterials) {
+                m.SetVector("_PortalPos" + (portal + 1).ToString(), portals[portal].transform.position);
+                m.SetVector("_PortalRot" + (portal + 1).ToString(), rot);
+                m.SetFloat("_PortalTime" + (portal + 1).ToString(), Time.timeSinceLevelLoad);
             }
 
             //Connect portals if both exist
@@ -109,11 +126,63 @@ public class PortalManager : MonoBehaviour {
                 //Make sure objects are scaled
                 sosArr[i].DoScale();
             }
+        }
+    }
+    
+    void FixOverhangs(Transform portal) {
+        var testPoints = new List<Vector3>
+        {
+            new Vector3(-0.52f,  0.0f, 0.1f),
+            new Vector3( 0.52f,  0.0f, 0.1f),
+            new Vector3( 0.0f, -1.02f, 0.1f),
+            new Vector3( 0.0f,  1.02f, 0.1f)
+        };
+
+        var testDirs = new List<Vector3>
+        {
+             Vector3.right,
+            -Vector3.right,
+             Vector3.up,
+            -Vector3.up
+        };
+        for (int i = 0; i < 4; i++) {
+            RaycastHit hit;
+            Vector3 raycastPos = portal.TransformPoint(testPoints[i]);
+            Vector3 raycastDir = portal.TransformDirection(testDirs[i]);
             
-            //Update DuplicateLevelObjects
-            for (int i = 0; i <= 1; i++) {
-                if (levelDuplicates[i] != null)
-                    levelDuplicates[i].GetComponentInChildren<DuplicateLevelObjects>().PortalMoved(portals[i].transform);
+            //GameObject tempCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            //tempCube.transform.position = raycastPos;
+            //tempCube.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            
+            if (Physics.CheckSphere(raycastPos, 0.05f, (1 << LayerMask.NameToLayer("Ground")))) {
+                continue;
+            } else if (Physics.Raycast(raycastPos, raycastDir, out hit, 1.02f, (1 << LayerMask.NameToLayer("Ground")))) {
+                Vector3 offset = hit.point - raycastPos;
+                portal.Translate(offset, Space.World);
+            }
+        }
+    }
+    
+    void FixIntersections(Transform portal) {
+        var testDirs = new List<Vector3>
+        {
+             Vector3.right,
+            -Vector3.right,
+             Vector3.up,
+            -Vector3.up
+        };
+        var testDists = new List<float> { 0.52f, 0.52f, 1.02f, 1.02f };
+        
+        for (int i = 0; i < 4; i++) {
+            RaycastHit hit;
+            Vector3 raycastPos = portal.TransformPoint(0.0f, 0.0f, -0.1f);
+            Vector3 raycastDir = portal.TransformDirection(testDirs[i]);
+
+            if (Physics.Raycast(raycastPos, raycastDir, out hit, testDists[i], (1 << LayerMask.NameToLayer("Ground"))))
+            {
+                var offset = (hit.point - raycastPos);
+                var newOffset = -raycastDir * (testDists[i] - offset.magnitude);
+                portal.Translate(newOffset, Space.World);
             }
         }
     }
@@ -131,14 +200,16 @@ public class PortalManager : MonoBehaviour {
                 
                 //Activate and set clip plane
                 levelDuplicates[pair.Item1].SetActive(true);
-                levelDuplicates[pair.Item1].GetComponentInChildren<DuplicateLevelObjects>().duplicateIndex = pair.Item1;
-                levelDuplicates[pair.Item1].GetComponentInChildren<DuplicateLevelObjects>().enabled = true;
+                //levelDuplicates[pair.Item1].GetComponentInChildren<DuplicateLevelObjects>().duplicateIndex = pair.Item1;
+                //levelDuplicates[pair.Item1].GetComponentInChildren<DuplicateLevelObjects>().enabled = true;
                 
-                foreach (Material m in levelDuplicates[pair.Item1].transform.GetChild(0).GetComponent<Renderer>().materials) {
-                    m.SetVector("_PlanePos",
-                        new Vector4(portals[pair.Item2].transform.position.x, portals[pair.Item2].transform.position.y, portals[pair.Item2].transform.position.z, 1));
-                    m.SetVector("_PlaneDir",
-                        new Vector4(-portals[pair.Item2].transform.forward.x, -portals[pair.Item2].transform.forward.y, -portals[pair.Item2].transform.forward.z, 1));
+                foreach (Renderer r in levelDuplicates[pair.Item1].GetComponentsInChildren<Renderer>()) {
+                    foreach (Material m in r.materials) {
+                        m.SetVector("_PlanePos",
+                            new Vector4(portals[pair.Item2].transform.position.x, portals[pair.Item2].transform.position.y, portals[pair.Item2].transform.position.z, 1));
+                        m.SetVector("_PlaneDir",
+                            new Vector4(-portals[pair.Item2].transform.forward.x, -portals[pair.Item2].transform.forward.y, -portals[pair.Item2].transform.forward.z, 1));
+                    }
                 }
 
                 //Reposition
@@ -153,8 +224,8 @@ public class PortalManager : MonoBehaviour {
                 levelDuplicates[pair.Item1].transform.rotation =
                     Quaternion.LookRotation(-portals[pair.Item2].transform.forward, portals[pair.Item2].transform.up);
             }
-            //Handle stencil mask render queues
-            if (Vector3.Scale(portals[1].transform.position, portals[0].transform.forward).magnitude >
+            //Handle stencil mask render queues (I don't think this is necessary anymore)
+            /*if (Vector3.Scale(portals[1].transform.position, portals[0].transform.forward).magnitude >
                     Vector3.Scale(portals[0].transform.position, portals[0].transform.forward).magnitude)
             {
                 portals[1].transform.Find("StencilModel").GetComponent<Renderer>().material.renderQueue = 1800;
@@ -163,7 +234,9 @@ public class PortalManager : MonoBehaviour {
             {
                 portals[1].transform.Find("StencilModel").GetComponent<Renderer>().material.renderQueue = 1900;
                 portals[0].transform.Find("StencilModel").GetComponent<Renderer>().material.renderQueue = 1800;
-            }
+            }*/
+            
+            portalsLinkedEvent.Invoke();
         }
     }
 

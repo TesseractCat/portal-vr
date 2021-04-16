@@ -5,20 +5,19 @@ using UnityEngine;
 public class MaximumVelocity : MonoBehaviour {
 
     public float MaxVel;
+    float MaxVelSquared;
     Rigidbody rigidbody;
 
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
+        MaxVelSquared = MaxVel * MaxVel;
     }
 
     void FixedUpdate () {
-        float speed = Vector3.Magnitude(rigidbody.velocity);
-
-        if (speed > MaxVel)
-
+        if (rigidbody.velocity.sqrMagnitude > MaxVelSquared)
         {
-            rigidbody.velocity *= 0.98f;
+            rigidbody.velocity = rigidbody.velocity.normalized * MaxVel;
         }
     }
 }

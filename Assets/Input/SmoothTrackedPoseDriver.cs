@@ -7,35 +7,15 @@ using UnityEngine.XR;
 
 public class SmoothTrackedPoseDriver : MonoBehaviour
 {
-    public XRNode device;
-    //InputDevice inputDevice;
+    public InputActionReference positionAction;
+    public InputActionReference rotationAction;
     public float speed;
     
-    //void Start() {
-    //    inputDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(device);
-    //}
-    
-    public void OnPosition(InputAction.CallbackContext context) {
-        //transform.localPosition = Vector3.Lerp(transform.localPosition, context.ReadValue<Vector3>(), Time.smoothDeltaTime * speed);
-        transform.localPosition = context.ReadValue<Vector3>();
-    }
-    public void OnRotation(InputAction.CallbackContext context) {
-        //transform.localRotation = Quaternion.Lerp(transform.localRotation, context.ReadValue<Quaternion>(), Time.smoothDeltaTime * speed);
-        transform.localRotation = context.ReadValue<Quaternion>();
-    }
-
     void Update()
     {
-        //transform.localPosition = Vector3.Lerp(transform.localPosition, UnityEngine.XR.InputTracking.GetLocalPosition(device), Time.smoothDeltaTime * speed);
-        //transform.localRotation = Quaternion.Lerp(transform.localRotation, UnityEngine.XR.InputTracking.GetLocalRotation(device), Time.smoothDeltaTime * speed);
-        
-        //Vector3 trackedPosition;
-        //if (inputDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.devicePosition, out trackedPosition)) {
-        //    transform.localPosition = Vector3.Lerp(transform.localPosition, trackedPosition, Time.smoothDeltaTime * speed);
-        //}
-        //Quaternion trackedRotation;
-        //if (inputDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.deviceRotation, out trackedRotation)) {
-        //    transform.localRotation = Quaternion.Lerp(transform.localRotation, trackedRotation, Time.smoothDeltaTime * speed);
-        //}
+        if (positionAction.action.phase != InputActionPhase.Canceled && positionAction.action.phase != InputActionPhase.Waiting)
+            transform.localPosition = Vector3.Lerp(transform.localPosition, positionAction.action.ReadValue<Vector3>(), Time.deltaTime * speed);
+        if (rotationAction.action.phase != InputActionPhase.Canceled && rotationAction.action.phase != InputActionPhase.Waiting)
+            transform.localRotation = Quaternion.Lerp(transform.localRotation, rotationAction.action.ReadValue<Quaternion>(), Time.deltaTime * speed);
     }
 }

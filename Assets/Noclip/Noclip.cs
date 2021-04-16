@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Noclip : MonoBehaviour
 {
@@ -13,13 +14,17 @@ public class Noclip : MonoBehaviour
     
     void FixedUpdate()
     {
+        var keyboard = Keyboard.current;
+        float horizontal = (keyboard.aKey.isPressed ? -1 : 0) + (keyboard.dKey.isPressed ? 1 : 0);
+        float vertical = (keyboard.sKey.isPressed ? -1 : 0) + (keyboard.wKey.isPressed ? 1 : 0);
+        
         float tempSpeed = speed;
         
         transform.position = transform.position +
-            Vector3.ClampMagnitude(transform.forward * Input.GetAxis("Vertical") +
-            transform.right * Input.GetAxis("Horizontal") +
-            (Input.GetKey(KeyCode.Space) ? new Vector3(0, 1, 0) : Vector3.zero) +
-            (Input.GetKey(KeyCode.LeftControl) ? new Vector3(0, -1, 0) : Vector3.zero), 1.0f) * tempSpeed;
+            Vector3.ClampMagnitude(transform.forward * vertical +
+            transform.right * horizontal +
+            (keyboard.spaceKey.isPressed ? new Vector3(0, 1, 0) : Vector3.zero) +
+            (keyboard.leftCtrlKey.isPressed ? new Vector3(0, -1, 0) : Vector3.zero), 1.0f) * tempSpeed;
     }
     
     void OnTriggerStay(Collider c) {
@@ -35,10 +40,11 @@ public class Noclip : MonoBehaviour
     }
     
     void Update() {
-        if (Input.GetMouseButtonDown(0)) {
+        var mouse = Mouse.current;
+        if (mouse.leftButton.wasPressedThisFrame) {
             portalManager.ShootPortal(transform.position, camera.transform.forward, 0, 0);
         }
-        if (Input.GetMouseButtonDown(1)) {
+        if (mouse.rightButton.wasPressedThisFrame) {
             portalManager.ShootPortal(transform.position, camera.transform.forward, 1, 45);
         }
     }
