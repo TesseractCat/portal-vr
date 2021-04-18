@@ -7,7 +7,7 @@ public class PortalManager : MonoBehaviour {
 
     public Transform mapParent;
 
-    public GameObject portalProjectile;
+    public GameObject[] portalProjectiles;
 
     public GameObject[] portalPrefabs = new GameObject[2];
     
@@ -46,10 +46,14 @@ public class PortalManager : MonoBehaviour {
                 }
             }
             
-            //Hit detected, create the portal
+            //Check if unportalable
+            if (hit.triangleIndex >= hit.collider.GetComponent<MeshFilter>().mesh.GetSubMesh(1).indexStart/3)
+                return;
+            
+            //Should be a good surface
             
             //Create portal projectile
-            //Instantiate(portalProjectile, transform.position, Quaternion.LookRotation(transform.forward));
+            //Instantiate(portalProjectiles[portal], position, Quaternion.LookRotation(direction));
 
             var wallDist = Vector3.zero;
             GameObject tempPortal = null;
@@ -100,6 +104,7 @@ public class PortalManager : MonoBehaviour {
             //Fix portal placement
             FixOverhangs(portals[portal].transform);
             FixIntersections(portals[portal].transform);
+            FixUnportalable(portals[portal].transform);
             
             //Only allow portal rotation on the ground
             if (hit.normal == new Vector3(0, 1, 0) || hit.normal == new Vector3(0, -1, 0))
@@ -116,6 +121,8 @@ public class PortalManager : MonoBehaviour {
                 m.SetVector("_PortalPos" + (portal + 1).ToString(), portals[portal].transform.position);
                 m.SetVector("_PortalRot" + (portal + 1).ToString(), rot);
                 m.SetFloat("_PortalTime" + (portal + 1).ToString(), Time.timeSinceLevelLoad);
+                m.SetMatrix("_MatrixRotX" + (portal + 1).ToString(), MatrixRotX(rot.x));
+                m.SetMatrix("_MatrixRotY" + (portal + 1).ToString(), MatrixRotY(rot.y));
             }
 
             //Connect portals if both exist
@@ -135,7 +142,12 @@ public class PortalManager : MonoBehaviour {
             new Vector3(-0.52f,  0.0f, 0.1f),
             new Vector3( 0.52f,  0.0f, 0.1f),
             new Vector3( 0.0f, -1.02f, 0.1f),
-            new Vector3( 0.0f,  1.02f, 0.1f)
+            new Vector3( 0.0f,  1.02f, 0.1f),
+            
+            new Vector3(-0.52f,  -1.02f, 0.1f),
+            new Vector3( 0.52f,  1.02f, 0.1f),
+            new Vector3( 0.52f, -1.02f, 0.1f),
+            new Vector3( -0.52f,  1.02f, 0.1f)
         };
 
         var testDirs = new List<Vector3>
@@ -143,9 +155,14 @@ public class PortalManager : MonoBehaviour {
              Vector3.right,
             -Vector3.right,
              Vector3.up,
-            -Vector3.up
+            -Vector3.up,
+            
+            Vector3.right + Vector3.up,
+            -(Vector3.right + Vector3.up),
+            -Vector3.right + Vector3.up,
+            -(-Vector3.right + Vector3.up),
         };
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 8; i++) {
             RaycastHit hit;
             Vector3 raycastPos = portal.TransformPoint(testPoints[i]);
             Vector3 raycastDir = portal.TransformDirection(testDirs[i]);
@@ -169,11 +186,16 @@ public class PortalManager : MonoBehaviour {
              Vector3.right,
             -Vector3.right,
              Vector3.up,
-            -Vector3.up
+            -Vector3.up,
+                
+            Vector3.right + Vector3.up,
+            -(Vector3.right + Vector3.up),
+            -Vector3.right + Vector3.up,
+            -(-Vector3.right + Vector3.up)
         };
-        var testDists = new List<float> { 0.52f, 0.52f, 1.02f, 1.02f };
+        var testDists = new List<float> { 0.52f, 0.52f, 1.02f, 1.02f, 1.2f, 1.2f, 1.2f, 1.2f };
         
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 8; i++) {
             RaycastHit hit;
             Vector3 raycastPos = portal.TransformPoint(0.0f, 0.0f, -0.1f);
             Vector3 raycastDir = portal.TransformDirection(testDirs[i]);
@@ -183,6 +205,46 @@ public class PortalManager : MonoBehaviour {
                 var offset = (hit.point - raycastPos);
                 var newOffset = -raycastDir * (testDists[i] - offset.magnitude);
                 portal.Translate(newOffset, Space.World);
+            }
+        }
+    }
+    
+    void FixUnportalable(Transform portal) {
+        var testPoints = new List<Vector3>
+        {
+            new Vector3(-0.52f,  0.0f, -0.1f),
+            new Vector3( 0.52f,  0.0f, -0.1f),
+            new Vector3( 0.0f, -1.02f, -0.1f),
+            new Vector3( 0.0f,  1.02f, -0.1f)
+        };
+        
+        var testDirs = new List<Vector3>
+        {
+             Vector3.right,
+            -Vector3.right,
+             Vector3.up,
+            -Vector3.up,
+        };
+        
+        //50 iterations of fixing
+        for (int j = 0; j < 50; j++) {
+            for (int i = 0; i < 4; i++) {
+                RaycastHit hit;
+                Vector3 raycastPos = portal.TransformPoint(testPoints[i]);
+                Vector3 raycastDir = portal.forward;
+                
+                if (Physics.Raycast(raycastPos, raycastDir, out hit, 0.2f, (1 << LayerMask.NameToLayer("Ground")))) {
+                    if (hit.triangleIndex >= hit.collider.GetComponent<MeshFilter>().mesh.GetSubMesh(1).indexStart/3) {
+                        //Unportalable Tile
+                        portal.Translate(portal.TransformDirection(testDirs[i]) * 0.2f, Space.World);
+                        break;
+                    }
+                }
+                
+                if (i == 3) {
+                    //We have done checked all sides and have not translated/broken the loop, so we are done
+                    return;
+                }
             }
         }
     }
@@ -248,5 +310,23 @@ public class PortalManager : MonoBehaviour {
     Vector3 Vector3Deg2Rad(Vector3 vector)
     {
         return new Vector3(Mathf.Deg2Rad * (vector.x), Mathf.Deg2Rad * (vector.y), Mathf.Deg2Rad * (vector.z));
+    }
+    
+    Matrix4x4 MatrixRotX(float theta) {
+        Matrix4x4 out_matrix = new Matrix4x4();
+        out_matrix.SetRow(0, new Vector4(1, 0, 0, 0));
+        out_matrix.SetRow(1, new Vector4(0, Mathf.Cos(theta), -Mathf.Sin(theta), 0));
+        out_matrix.SetRow(2, new Vector4(0, Mathf.Sin(theta), Mathf.Cos(theta), 0));
+        out_matrix.SetRow(3, new Vector4(0, 0, 0, 1));
+        return out_matrix;
+    }
+    
+    Matrix4x4 MatrixRotY(float theta) {
+        Matrix4x4 out_matrix = new Matrix4x4();
+        out_matrix.SetRow(0, new Vector4(Mathf.Cos(theta), 0, Mathf.Sin(theta), 0));
+        out_matrix.SetRow(1, new Vector4(0, 1, 0, 0));
+        out_matrix.SetRow(2, new Vector4(-Mathf.Sin(theta), 0, Mathf.Cos(theta), 0));
+        out_matrix.SetRow(3, new Vector4(0, 0, 0, 1));
+        return out_matrix;
     }
 }

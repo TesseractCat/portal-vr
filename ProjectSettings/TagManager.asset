@@ -32,8 +32,8 @@ TagManager:
   - VRUI
   - Portal1LightMask
   - Portal2LightMask
-  - 
-  - 
+  - Menu
+  - SelectableObject
   - 
   - 
   - 

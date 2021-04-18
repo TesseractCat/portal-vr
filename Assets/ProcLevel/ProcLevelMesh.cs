@@ -51,9 +51,9 @@ public class ProcLevelMesh : MonoBehaviour {
             }
         }
         
-        for (int x = 40; x < 60; x++) {
-            for (int y = 40; y < 50; y++) {
-                for (int z = 40; z < 60; z++) {
+        for (int x = 45; x < 55; x++) {
+            for (int y = 48; y < 52; y++) {
+                for (int z = 45; z < 55; z++) {
                     levelArr[x,y,z] = 0;
                 }
             }
@@ -175,7 +175,35 @@ public class ProcLevelMesh : MonoBehaviour {
             } else {
                 uvs.Add(tempWallUvs[i]);
             }
-            colors.Add(Color.white);
         }
+        
+        //Colors
+        for (int i = 0; i < 4; i++) {
+            //Vector3Int side1Offset = pos + normal + (Quaternion.AngleAxis(90 * i, normal) * Vector3.Cross(normal, Vector3.up).normalized).RoundToInt();
+            //if (Mathf.Abs(normal.y) == 1)
+            //    side1Offset = pos + normal + (Quaternion.AngleAxis(90 * i, normal) * Vector3.Cross(normal, Vector3.right).normalized).RoundToInt();
+            //
+            //Vector3Int side2Offset = pos + normal + (Quaternion.AngleAxis(90 * (i+1), normal) * Vector3.Cross(normal, Vector3.up).normalized).RoundToInt();
+            //if (Mathf.Abs(normal.y) == 1)
+            //    side2Offset = pos + normal + (Quaternion.AngleAxis(90 * (i+1), normal) * Vector3.Cross(normal, Vector3.right).normalized).RoundToInt();
+            
+            Vector3Int cornerPos = (rotation * tempVertices[i]).normalized.RoundToInt() + pos + normal;
+            bool corner = levelArr[cornerPos.x, cornerPos.y, cornerPos.z] != 0;
+            
+            Vector3Int side1Pos = (rotation * (Quaternion.AngleAxis(45, Vector3.forward) * tempVertices[i])).normalized.RoundToInt() + pos + normal;
+            bool side1 = levelArr[side1Pos.x, side1Pos.y, side1Pos.z] != 0;
+            
+            Vector3Int side2Pos = (rotation * (Quaternion.AngleAxis(-45, Vector3.forward) * tempVertices[i])).normalized.RoundToInt() + pos + normal;
+            bool side2 = levelArr[side2Pos.x, side2Pos.y, side2Pos.z] != 0;
+            
+            colors.Add(Mathf.Max(VertexAO(side1, side2, corner), 0)/3.0f * Color.white);
+        }
+    }
+    
+    int VertexAO(bool side1, bool side2, bool corner) {
+        if(side1 && side2) {
+            return 0;
+        }
+        return 3 - ((side1 ? 1 : 0) + (side2 ? 1 : 0) + (corner ? 1 : 0));
     }
 }

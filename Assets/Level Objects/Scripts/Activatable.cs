@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class Activatable : MonoBehaviour
 {
+    public int channel = -1;
+    
     public virtual void Activate() { }
     public virtual void Deactivate() { }
 }

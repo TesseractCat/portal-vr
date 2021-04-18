@@ -13,6 +13,8 @@ public class PlacedObject {
     public JsonVector3 normal;
     
     public JsonQuaternion rotation;
+    
+    public int connection = -1;
 }
 
 public class VoxelEditor : MonoBehaviour
@@ -32,16 +34,24 @@ public class VoxelEditor : MonoBehaviour
     LevelScriptableObject selectedObject = null;
     GameObject selectedObjectPreview = null;
     
+    Transform highlightedObject = null;
+    
     Level currentLevel;
+    
+    bool selectMode;
     
     void Awake() {
         currentLevel = new Level();
+        ResetHandles();
     }
     
     void Update()
     {
         var mouse = Mouse.current;
         var keyboard = Keyboard.current;
+        
+        if (PointInGUI(mouse.position.ReadValue()))
+            return;
         
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(mouse.position.ReadValue());
@@ -52,19 +62,39 @@ public class VoxelEditor : MonoBehaviour
             point = (p - hit.normal/2.0f).RoundToInt();
         }
         
+        //Object selection
+        if (selectMode) {
+            if (mouse.leftButton.wasPressedThisFrame) {
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, (1 << LayerMask.NameToLayer("SelectableObject")))) {
+                    highlightedObject = hit.collider.transform;
+                }/* else {
+                    highlightedObject = null;
+                }*/
+            }
+            return;
+        }
+        
         //Object placement
         if (selectedObject != null) {
             if (point.HasValue) {
-                if (((selectedObject.canPlaceOnWalls && hit.normal.RoundToInt().y == 0) ||
-                        (selectedObject.canPlaceOnGround && hit.normal.RoundToInt().Abs().y == 1))) {// &&
-                        //!currentLevel.levelObjects.Find((point.Value + hit.normal).RoundToInt())) {
-                    //We can show the object :)
+                if (selectedObject.canPlaceNormals == Vector3Int.one ||
+                        hit.normal.RoundToInt().Abs()[0] == selectedObject.canPlaceNormals[0] || 
+                        hit.normal.RoundToInt().Abs()[1] == selectedObject.canPlaceNormals[1] || 
+                        hit.normal.RoundToInt().Abs()[2] == selectedObject.canPlaceNormals[2]) {
+                    //We can show the object :^)
                     selectedObjectPreview.transform.position =
                         levelMesh.transform.TransformPoint(point.Value + hit.normal/2.0f);
                     selectedObjectPreview.transform.rotation = Quaternion.LookRotation(hit.normal, Vector3.up);
                     
                     //Placing object
                     if (mouse.leftButton.wasPressedThisFrame) {
+                        //Don't place objects into the same voxel
+                        foreach (KeyValuePair<JsonVector3Int, PlacedObject> p in currentLevel.levelObjects) {
+                            if ((Vector3Int)p.Key == (point.Value + hit.normal).RoundToInt()) {
+                                return;
+                            }
+                        }
+                        
                         PlacedObject toPlace = new PlacedObject();
                         
                         toPlace.label = selectedObject.label;
@@ -77,7 +107,10 @@ public class VoxelEditor : MonoBehaviour
                                 new KeyValuePair<JsonVector3Int, PlacedObject>(
                                     (point.Value + hit.normal).RoundToInt(), toPlace));
                         
-                        saveLoadHandler.PlaceObject(toPlace, true);
+                        Transform placedTransform = saveLoadHandler.PlaceObject(toPlace, (point.Value + hit.normal).RoundToInt(), true);
+                        
+                        if (selectedObject.excludeWall)
+                            levelMesh.Generate();
                     }
                 } else {
                     selectedObjectPreview.transform.position = new Vector3(1000,1000,1000);
@@ -175,7 +208,7 @@ public class VoxelEditor : MonoBehaviour
             rightHandle = rightHandle.Value + (handleNormal * amount).RoundToInt();
             
             selectionQuad.transform.position +=
-                (handleNormal * levelMesh.transform.localScale.x * amount).RoundToInt();
+                (handleNormal * levelMesh.transform.localScale.x * amount);
         }
     }
     
@@ -207,7 +240,9 @@ public class VoxelEditor : MonoBehaviour
         rightHandle = null;
         
         //Toggle
-        selectionQuad.transform.localScale = 2.0f * Vector3.one;
+        selectionQuad.transform.localScale = levelMesh.transform.localScale.x * Vector3.one;
+        selectionStartQuad.transform.localScale = levelMesh.transform.localScale.x * Vector3.one;
+        
         selectionQuad.GetComponent<Renderer>().enabled = false;
         selectionStartQuad.GetComponent<Renderer>().enabled = false;
     }
@@ -248,22 +283,94 @@ public class VoxelEditor : MonoBehaviour
     void OnGUI() {
         GUI.skin = guiSkin;
         objectPaletteRect = GUILayout.Window(0, objectPaletteRect, OnPalette, "Palette");
+        
+        if (selectMode && highlightedObject != null) {
+            Vector2 highlightedObjectGUIPosition = ScreenToGUIPoint(Camera.main.WorldToScreenPoint(highlightedObject.position));
+            GUILayout.Window(1, new Rect(highlightedObjectGUIPosition.x, highlightedObjectGUIPosition.y, 125, 100), OnProperties, "Properties");
+        }
+    }
+    
+    bool PointInGUI(Vector2 screenPoint) {
+        //Vector2 guiPoint = GUIUtility.ScreenToGUIPoint(screenPoint);
+        //Debug.Log("Screen: " + screenPoint + ", GUI: " + guiPoint);
+        return objectPaletteRect.Contains(ScreenToGUIPoint(screenPoint));
+    }
+    
+    void OnProperties(int id) {
+        //Find selected info
+        //TODO: Cache this information earlier
+        int levelObjectIdx = GetLevelObjectAtPosition(highlightedObject.position);
+        LevelScriptableObject highlightedScriptableObject = null;
+        foreach (LevelScriptableObject lo in saveLoadHandler.levelObjects) {
+            if (currentLevel.levelObjects[levelObjectIdx].Value.label == lo.label) {
+                highlightedScriptableObject = lo;
+                break;
+            }
+        }
+        
+        if (highlightedScriptableObject.connectable) {
+            if (GUILayout.Button("Channel [" + currentLevel.levelObjects[levelObjectIdx].Value.connection.ToString() + "]")) {
+                currentLevel.levelObjects[levelObjectIdx].Value.connection += 1;
+                if (currentLevel.levelObjects[levelObjectIdx].Value.connection > saveLoadHandler.connectionChannels) {
+                    currentLevel.levelObjects[levelObjectIdx].Value.connection = -1;
+                }
+            }
+        }
+        if (GUILayout.Button("Delete")) {
+            GameObject.Destroy(highlightedObject.gameObject);
+            currentLevel.levelObjects.RemoveAt(levelObjectIdx);
+        }
+    }
+    
+    int GetLevelObjectAtPosition(Vector3 position) {
+        Vector3Int pos = levelMesh.transform.InverseTransformPoint(position).RoundToInt();
+        
+        for (int i = 0; i < currentLevel.levelObjects.Count; i++) {
+            if ((Vector3Int)currentLevel.levelObjects[i].Key == pos) {
+                return i;
+            }
+        }
+        
+        return -1;
     }
     
     void OnPalette(int id) {
         GUILayout.Label("");
-        foreach (LevelScriptableObject component in saveLoadHandler.levelObjects) {
+        for (int i = 0; i < saveLoadHandler.levelObjects.Count; i++) {
+            if (i % 2 == 0) {
+                if (i == 0) {
+                    GUILayout.BeginHorizontal();
+                } else {
+                    GUILayout.EndHorizontal();
+                    GUILayout.BeginHorizontal();
+                }
+            }
+            LevelScriptableObject component = saveLoadHandler.levelObjects[i];
             if (GUILayout.Button(component.label)) {
+                selectMode = false;
                 SelectObject(component);
             }
         }
+        GUILayout.EndHorizontal();
         
         GUILayout.Space(10);
+        GUILayout.BeginHorizontal();
         if (GUILayout.Button("Voxels")) {
+            selectMode = false;
             selectedObject = null;
-            GameObject.Destroy(selectedObjectPreview);
+            if (selectedObjectPreview != null)
+                GameObject.Destroy(selectedObjectPreview);
             ResetHandles();
         }
+        if (GUILayout.Button("Select")) {
+            selectMode = true;
+            selectedObject = null;
+            highlightedObject = null;
+            if (selectedObjectPreview != null)
+                GameObject.Destroy(selectedObjectPreview);
+            ResetHandles();
+        }
+        GUILayout.EndHorizontal();
         
         GUILayout.Space(20);
         
@@ -271,6 +378,8 @@ public class VoxelEditor : MonoBehaviour
         currentLevel.name = GUILayout.TextField(currentLevel.name, 25);
         if (GUILayout.Button("Save"))
             Save();
+        
+        GUILayout.BeginHorizontal();
         if (GUILayout.Button("Reset Level")) {
             currentLevel = new Level();
             levelMesh.ClearLevel();
@@ -280,6 +389,7 @@ public class VoxelEditor : MonoBehaviour
             currentLevel.levelObjects = new List<KeyValuePair<JsonVector3Int, PlacedObject>>();
             saveLoadHandler.ClearLevelObjects();
         }
+        GUILayout.EndHorizontal();
         
         GUILayout.Space(20);
         
@@ -295,5 +405,9 @@ public class VoxelEditor : MonoBehaviour
         
         if (GUILayout.Button("Refresh"))
             saveLoadHandler.Refresh();
+    }
+    
+    Vector2 ScreenToGUIPoint(Vector2 screenPoint) {
+        return new Vector2(screenPoint.x, Camera.main.pixelHeight - screenPoint.y);
     }
 }

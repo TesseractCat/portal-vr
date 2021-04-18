@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46c5593a3c034984180078eaa703f2e6, type: 3}
+  m_Name: FloorButton
+  m_EditorClassIdentifier: 
+  label: Floor Button
+  objectPrefab: {fileID: 8843384369807373916, guid: 0c29fffe144634940aa74d2bb48065dd,
+    type: 3}
+  visualPrefab: {fileID: 8843384369807373916, guid: 0c29fffe144634940aa74d2bb48065dd,
+    type: 3}
+  canPlaceNormals: {x: 1, y: 1, z: 1}
+  maxOne: 0
+  excludeWall: 0
+  decoration: 0
+  connectable: 1

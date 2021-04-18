@@ -19,10 +19,17 @@ public class Level {
 
 public class SaveLoadHandler : MonoBehaviour
 {
+    [Header("Object References")]
     public ProcLevelMesh levelMesh;
     public Transform levelObjectsParent;
     
     public List<LevelScriptableObject> levelObjects;
+    
+    [Header("Prefabs")]
+    public GameObject selectablePrefab;
+    
+    [Header("Config")]
+    public int connectionChannels = 16;
     
     string savePath;
     string saveFolderPath;
@@ -69,13 +76,49 @@ public class SaveLoadHandler : MonoBehaviour
     }
 
     public void Load(Level l, bool visual) {
+        //Reset everything
+        ClearLevelObjects();
+        levelMesh.ClearLevel();
+        
+        //Place objects
+        foreach (KeyValuePair<JsonVector3Int, PlacedObject> kv in l.levelObjects) {
+            Transform tempObj = PlaceObject(kv.Value, kv.Key, visual);
+            
+            //Configure channel
+            if (!visual) {
+                Activator activator = tempObj.GetComponentInChildren<Activator>();
+                Activatable activatable = tempObj.GetComponentInChildren<Activatable>();
+                if (activator != null)
+                    activator.channel = kv.Value.connection;
+                if (activatable != null)
+                    activatable.channel = kv.Value.connection;
+            }
+        }
+        
+        //Do connections
+        if (!visual) {
+            Activator[] activators = FindObjectsOfType<Activator>();
+            Activatable[] activatables = FindObjectsOfType<Activatable>();
+            
+            //Iterate through all channels
+            for (int i = 0; i <= connectionChannels; i++) {
+                //Find all activators on this channel
+                foreach (Activator av in activators) {
+                    if (av.channel == i) {
+                        //Add all activatables on the same channel
+                        foreach (Activatable ab in activatables) {
+                            if (ab.channel == i) {
+                                av.connectedList.Add(ab);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        //Generate voxel mesh
         levelMesh.levelArr = inflatedArray(l.flatLevelArray, l.levelDimensions);
         levelMesh.Generate();
-        
-        ClearLevelObjects();
-        foreach (KeyValuePair<JsonVector3Int, PlacedObject> kv in l.levelObjects) {
-            PlaceObject(kv.Value, visual);
-        }
     }
     
     public Level Load(string path, bool visual) {
@@ -94,7 +137,7 @@ public class SaveLoadHandler : MonoBehaviour
         }
     }
     
-    public void PlaceObject(PlacedObject toPlace, bool visual) {
+    public Transform PlaceObject(PlacedObject toPlace, Vector3Int pos, bool visual) {
         LevelScriptableObject levelObject = null;
         foreach (LevelScriptableObject lo in levelObjects) {
             if (toPlace.label == lo.label) {
@@ -104,13 +147,17 @@ public class SaveLoadHandler : MonoBehaviour
         }
         
         if (levelObject == null)
-            return;
+            return null;
         
         Vector3 position = levelMesh.transform.TransformPoint(toPlace.position);
+        GameObject tempObject;
         if (visual) {
-            Instantiate(levelObject.visualPrefab, position, toPlace.rotation, levelObjectsParent);
+            Transform selectableParent =
+                Instantiate(selectablePrefab, position + (Vector3)toPlace.normal * levelMesh.transform.localScale.x * 0.5f, Quaternion.identity, levelObjectsParent).transform;
+            selectableParent.GetComponent<BoxCollider>().size = levelMesh.transform.localScale;
+            tempObject = Instantiate(levelObject.visualPrefab, position, toPlace.rotation, selectableParent);
         } else {
-            GameObject tempObject = (GameObject)Instantiate(levelObject.objectPrefab, position, toPlace.rotation);
+            tempObject = (GameObject)Instantiate(levelObject.objectPrefab, position, toPlace.rotation);
             tempObject.name = levelObject.label;
             if (tempObject.GetComponentInChildren<PortalObject>())
                 tempObject.GetComponentInChildren<PortalObject>().enabled = true;
@@ -120,7 +167,18 @@ public class SaveLoadHandler : MonoBehaviour
             } else {
                 tempObject.transform.parent = levelObjectsParent.transform;
             }
+            
+            if (tempObject.GetComponentInChildren<Symbol>() != null) {
+                tempObject.GetComponentInChildren<Symbol>().Assign(toPlace.connection);
+            }
         }
+        
+        if (levelObject.excludeWall) {
+            Vector3Int normal = ((Vector3)toPlace.normal).RoundToInt();
+            levelMesh.excludedWalls.Add(pos - normal, normal);
+        }
+        
+        return tempObject.transform;
     }
     
     public int[] flattenedArray(int[,,] multidimensionalArray) {

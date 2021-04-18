@@ -13,12 +13,11 @@ public class PortalObject : MonoBehaviour
     PortalManager portalManager;
     Transform mapParent;
     
-    void Start()
+    void Awake()
     {
         mapParent = FindObjectOfType<ProcLevelMesh>().transform;
         portalManager = FindObjectOfType<PortalManager>();
-        if (portalManager != null)
-            portalManager.portalsLinkedEvent.AddListener(OnPortalsLinked);
+        portalManager.portalsLinkedEvent.AddListener(OnPortalsLinked);
     }
     
     void OnTriggerExit (Collider c)

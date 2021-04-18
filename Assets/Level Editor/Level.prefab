@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 550111672898090897}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -100, y: -100, z: -100}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 2.4, y: 2.4, z: 2.4}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -64,8 +64,14 @@ MonoBehaviour:
   levelObjectsParent: {fileID: 0}
   levelObjects:
   - {fileID: 11400000, guid: 646ad867d64b8e2478efe203b2d5966a, type: 2}
+  - {fileID: 11400000, guid: cb5387484628c9347a535f864eda495d, type: 2}
   - {fileID: 11400000, guid: 8e8d11431c1435f4091678495a7c6362, type: 2}
+  - {fileID: 11400000, guid: e9a15f1c0a6f9314a99c1a70350ebf6c, type: 2}
   - {fileID: 11400000, guid: 6ff9a1faf33f45d41af153b8e9b06839, type: 2}
+  - {fileID: 11400000, guid: aa484c742d760da4aa5bd9c11f156207, type: 2}
+  - {fileID: 11400000, guid: 3c306e43082f6d949aaf3da2abfc73bc, type: 2}
+  selectablePrefab: {fileID: 8983319234528231407, guid: e5aac8e9621b94740b9e3268979d9371,
+    type: 3}
 --- !u!33 &550111672898090900
 MeshFilter:
   m_ObjectHideFlags: 0

@@ -5,16 +5,14 @@ using UnityEngine;
 public class HandleCameraTeleport : MonoBehaviour {
     
     Transform lastSyncedPortal;
-    GameObject lastUsedPortal;
 
     void OnTriggerStay (Collider c)
     {
-        if (c.gameObject.tag == "PortalColl" && c.transform.parent.InverseTransformPoint(transform.position).z > 0.01f && c.gameObject != lastUsedPortal)
+        if (c.gameObject.tag == "PortalColl" && c.transform.parent.InverseTransformPoint(transform.position).z > 0.01f)
         {
             Quaternion flipRot = Quaternion.AngleAxis(180.0f, Vector3.up);
             
-            lastUsedPortal = c.gameObject;
-            StartCoroutine(ResetLastUsedPortal());
+            //StartCoroutine(ResetLastUsedPortal());
             lastSyncedPortal = c.transform.parent.GetComponentInChildren<CorrespondingPortal>().correspondingPortal;
 
             //Handle position
@@ -29,10 +27,10 @@ public class HandleCameraTeleport : MonoBehaviour {
         }
     }
     
-    IEnumerator ResetLastUsedPortal() {
+    /*IEnumerator ResetLastUsedPortal() {
         yield return new WaitForSeconds(0.5f);
         lastUsedPortal = null;
-    }
+    }*/
 
     void FixedUpdate()
     {

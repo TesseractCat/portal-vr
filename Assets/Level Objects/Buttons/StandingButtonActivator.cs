@@ -8,21 +8,18 @@ public class StandingButtonActivator : Activator
     public InputActionReference pressAction;
     
     public void OnTriggerStay(Collider c) {
-        if (c.gameObject.tag == "Hand" && pressAction.action.triggered) {
+        if (c.gameObject.tag == "Hand" && pressAction.action.triggered && pressAction.action.ReadValue<float>() > 0) {
             if (this.oneShot) {
-                this.connected.Activate();
+                this.Activate();
                 return;
             }
             
             if (this.toggle && !this.activated) {
-                this.connected.Activate();
-                this.activated = true;
+                this.Activate();
             } else if (this.toggle && this.activated) {
-                this.connected.Deactivate();
-                this.activated = false;
+                this.Deactivate();
             } else if (!this.toggle && !this.activated) {
-                this.connected.Activate();
-                this.activated = true;
+                this.Activate();
                 StartCoroutine(DeactivateCoroutine());
             }
         }
@@ -30,7 +27,6 @@ public class StandingButtonActivator : Activator
     
     IEnumerator DeactivateCoroutine() {
         yield return new WaitForSeconds(3);
-        this.connected.Activate();
-        this.activated = false;
+        this.Deactivate();
     }
 }

@@ -17,6 +17,8 @@ MonoBehaviour:
     type: 3}
   visualPrefab: {fileID: 6198800203217167699, guid: 4d51af2f651f73c4a836659d80857ad1,
     type: 3}
-  canPlaceOnWalls: 0
-  canPlaceOnGround: 1
+  canPlaceNormals: {x: 0, y: 1, z: 0}
   maxOne: 0
+  excludeWall: 0
+  decoration: 0
+  connectable: 1

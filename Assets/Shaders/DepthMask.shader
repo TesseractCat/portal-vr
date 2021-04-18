@@ -10,7 +10,7 @@
 
 		ColorMask 0
 		ZWrite On
-        Cull off
+        //Cull off
 
 		// Do nothing specific in the pass:
 

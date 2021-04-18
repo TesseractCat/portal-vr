@@ -4,8 +4,9 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: PlaneCut
   m_Shader: {fileID: 4800000, guid: 345d533eec7e28a4baf30fba04c6b4e1, type: 3}
   m_ShaderKeywords: 
@@ -66,9 +67,12 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _PortalTime1: 0
+    - _PortalTime2: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _StencilComp: 3
     - _StencilMask: 2
     - _UVSec: 0
     - _ZWrite: 1
@@ -77,3 +81,8 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _PlaneDir: {r: -0, g: -0, b: -1, a: 0}
     - _PlanePos: {r: 0, g: 0, b: 0, a: 1}
+    - _PortalPos1: {r: 0, g: 0, b: 0, a: 1}
+    - _PortalPos2: {r: 0, g: 0, b: 0, a: 1}
+    - _PortalRot1: {r: 0, g: 0, b: 0, a: 1}
+    - _PortalRot2: {r: 0, g: 0, b: 0, a: 1}
+  m_BuildTextureStacks: []

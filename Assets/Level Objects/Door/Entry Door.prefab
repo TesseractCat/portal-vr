@@ -1,33 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!64 &4574623435701845120
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4574623437374155588}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300008, guid: 819f15d6b23c9e548ab0d43459faf1a5, type: 3}
---- !u!64 &4574623435701845121
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4574623437374155610}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300010, guid: 819f15d6b23c9e548ab0d43459faf1a5, type: 3}
 --- !u!1 &4712879315450915540
 GameObject:
   m_ObjectHideFlags: 0
@@ -38,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1410619521797887329}
   - component: {fileID: 9036008147346700265}
+  - component: {fileID: -479539277119717158}
   m_Layer: 0
   m_Name: Entry Door
   m_TagString: Untagged
@@ -72,9 +45,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fce35872a765604698167bd42be9348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visualsPrefab: {fileID: 4712879315450915540}
+  visualsPrefab: {fileID: 6760786249244047029, guid: f9abbbe3f7b69c8418f27a0e1dea786f,
+    type: 3}
   dynamicPosition: 0
   onlyOneDuplicate: -1
+--- !u!114 &-479539277119717158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4712879315450915540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36e7bd94ff674bd41a3b9f66866c236d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftSide: {fileID: 4859333335485512623}
+  rightSide: {fileID: 71176491265886162}
+  openSpeed: 5
 --- !u!1001 &4574623437374189044
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -100,7 +89,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400008, guid: 819f15d6b23c9e548ab0d43459faf1a5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 400008, guid: 819f15d6b23c9e548ab0d43459faf1a5, type: 3}
       propertyPath: m_LocalRotation.w
@@ -138,15 +127,15 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4574623437374189044}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4574623437374155610 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100014, guid: 819f15d6b23c9e548ab0d43459faf1a5,
+--- !u!4 &4859333335485512623 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8940632808050562651, guid: 819f15d6b23c9e548ab0d43459faf1a5,
     type: 3}
   m_PrefabInstance: {fileID: 4574623437374189044}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4574623437374155588 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100016, guid: 819f15d6b23c9e548ab0d43459faf1a5,
+--- !u!4 &71176491265886162 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4575812678347287078, guid: 819f15d6b23c9e548ab0d43459faf1a5,
     type: 3}
   m_PrefabInstance: {fileID: 4574623437374189044}
   m_PrefabAsset: {fileID: 0}

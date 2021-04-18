@@ -54,6 +54,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "Activate",
+                    "type": "Button",
+                    "id": "d344ebca-f3a3-4785-add3-7a88c4df064e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "Left Hand Position",
                     "type": "Value",
                     "id": "aa391666-dfd0-4511-a4e2-70ac89814541",
@@ -84,14 +92,6 @@
                     "expectedControlType": "Quaternion",
                     "processors": "",
                     "interactions": ""
-                },
-                {
-                    "name": "Activate",
-                    "type": "Button",
-                    "id": "d344ebca-f3a3-4785-add3-7a88c4df064e",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -99,6 +99,17 @@
                     "name": "",
                     "id": "a5f3ab1b-b093-40b9-b69a-4d14637bc3ca",
                     "path": "<WMRSpatialController>{LeftHand}/joystick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8af652e4-cc6a-4eb3-bce3-000d52349d88",
+                    "path": "<XRController>{LeftHand}/joystick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -119,8 +130,30 @@
                 },
                 {
                     "name": "",
+                    "id": "1faa91fe-f18e-4f7b-a329-3d30410ca357",
+                    "path": "<XRController>{RightHand}/primaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Portal 1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "6091f436-7ce3-427a-95ab-1802dcaf455d",
                     "path": "<WMRSpatialController>{RightHand}/touchpadClicked",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Portal 2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6164bc4d-043b-4a85-97a5-f3a59a48c4a3",
+                    "path": "<XRController>{RightHand}/secondaryButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -185,8 +218,30 @@
                 },
                 {
                     "name": "",
+                    "id": "7bb6bbdf-fa97-4ad3-9e0e-c672c7809e6a",
+                    "path": "<XRController>{RightHand}/gripPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Grab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "39801fac-0503-4c9d-9ecc-bb20e3139a6a",
                     "path": "<WMRSpatialController>/menu",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "200b3724-20bc-4098-8e22-4b89c6ac54af",
+                    "path": "<XRController>{RightHand}/menu",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -207,8 +262,30 @@
                 },
                 {
                     "name": "",
+                    "id": "1247c455-140f-41fe-9f02-ab37989d0b38",
+                    "path": "<XRController>{RightHand}/primaryTouched",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Laser",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "6d81083b-f47d-4701-8d5a-8ff4b667c468",
                     "path": "<WMRSpatialController>{LeftHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Activate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6c84c670-ca54-49fc-af47-34277923d0c4",
+                    "path": "<XRController>{LeftHand}/triggerPressed",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

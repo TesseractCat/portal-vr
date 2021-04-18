@@ -77,7 +77,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 0.16628768, g: 0.29163286, b: 0.8000001, a: 1}
-    - _Emission: {r: 0.18609823, g: 0.3780115, b: 0.7735849, a: 0}
+    - _Emission: {r: 0.2216981, g: 0.47594315, b: 1, a: 0}
     - _EmissionColor: {r: 0, g: 0.42352942, b: 0.72156864, a: 1}
     - _PlaneDir: {r: 0, g: 0, b: 0, a: 1}
     - _PlanePos: {r: 0, g: 0, b: 0, a: 1}

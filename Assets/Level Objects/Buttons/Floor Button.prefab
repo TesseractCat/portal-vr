@@ -1,5 +1,95 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3682934544841017934
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3886747801981985144}
+  - component: {fileID: 8724506529100606067}
+  - component: {fileID: 2585988592926261613}
+  m_Layer: 0
+  m_Name: Activation Zone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3886747801981985144
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3682934544841017934}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.733, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4209342618884001613}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8724506529100606067
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3682934544841017934}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2585988592926261613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3682934544841017934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bcb7fad272eea84aa3abb38f7f5d41e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onTriggerEnter:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 921998080948485155}
+        m_TargetAssemblyTypeName: FloorButtonActivator, Assembly-CSharp
+        m_MethodName: OnTriggerEnter
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onTriggerExit:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 921998080948485155}
+        m_TargetAssemblyTypeName: FloorButtonActivator, Assembly-CSharp
+        m_MethodName: OnTriggerExit
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onTriggerStay:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!65 &1431563578
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11,23 +101,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.3, z: 1}
+  m_Size: {x: 1.3, y: 0.48, z: 1.3}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4315084070394685694
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3973067435792595940}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fce35872a765604698167bd42be9348, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visualsPrefab: {fileID: 3973067435792595940}
-  dynamicPosition: 0
-  onlyOneDuplicate: -1
 --- !u!1 &8843384369807373916
 GameObject:
   m_ObjectHideFlags: 0
@@ -37,6 +112,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4209342618884001613}
+  - component: {fileID: 4426978224560709805}
+  - component: {fileID: 921998080948485155}
   m_Layer: 0
   m_Name: Floor Button
   m_TagString: Untagged
@@ -56,9 +133,119 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4353005450017808734}
+  - {fileID: 3886747801981985144}
+  - {fileID: 8769961351092926516}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4426978224560709805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8843384369807373916}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fce35872a765604698167bd42be9348, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualsPrefab: {fileID: 156309639683521477, guid: c9121dab5f91c58438232376ce7b0048,
+    type: 3}
+  dynamicPosition: 0
+  onlyOneDuplicate: -1
+--- !u!114 &921998080948485155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8843384369807373916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e28678ee7f45d94ba88d6b2fc592e83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  channel: -1
+  connectedList: []
+  oneShot: 0
+  toggle: 0
+  activated: 0
+--- !u!1001 &707799862155167628
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 4209342618884001613}
+    m_Modifications:
+    - target: {fileID: 5404180678070599418, guid: 19121869a015a654c871c33b3ad2c442,
+        type: 3}
+      propertyPath: m_Name
+      value: Connection Sign
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099641858538880952, guid: 19121869a015a654c871c33b3ad2c442,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099641858538880952, guid: 19121869a015a654c871c33b3ad2c442,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099641858538880952, guid: 19121869a015a654c871c33b3ad2c442,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099641858538880952, guid: 19121869a015a654c871c33b3ad2c442,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099641858538880952, guid: 19121869a015a654c871c33b3ad2c442,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099641858538880952, guid: 19121869a015a654c871c33b3ad2c442,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099641858538880952, guid: 19121869a015a654c871c33b3ad2c442,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099641858538880952, guid: 19121869a015a654c871c33b3ad2c442,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099641858538880952, guid: 19121869a015a654c871c33b3ad2c442,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099641858538880952, guid: 19121869a015a654c871c33b3ad2c442,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099641858538880952, guid: 19121869a015a654c871c33b3ad2c442,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 19121869a015a654c871c33b3ad2c442, type: 3}
+--- !u!4 &8769961351092926516 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8099641858538880952, guid: 19121869a015a654c871c33b3ad2c442,
+    type: 3}
+  m_PrefabInstance: {fileID: 707799862155167628}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4315084071322240693
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -17,7 +17,8 @@ public class ScaleOnSpawn : MonoBehaviour {
 	}
 
 	void Update () {
-        transform.localScale = Vector3.Lerp(transform.localScale, defaultScale, SmoothStep(0.0f, 2.0f, (Time.time - scaleTime)));
+        //transform.localScale = Vector3.Lerp(transform.localScale, defaultScale, SmoothStep(0.0f, 2.0f, (Time.time - scaleTime)));
+        transform.localScale = Vector3.Lerp(Vector3.Scale(defaultScale, restrictAxis), defaultScale, SmoothStep(0.0f, 0.25f, (Time.time - scaleTime)));
 
         if (transform.position != lastPos)
         {
@@ -28,7 +29,7 @@ public class ScaleOnSpawn : MonoBehaviour {
 
     public void DoScale()
     {
-        transform.localScale = Vector3.Scale(transform.localScale, restrictAxis);
+        //transform.localScale = Vector3.Scale(transform.localScale, restrictAxis);
         scaleTime = Time.time;
     }
     

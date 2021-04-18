@@ -8,10 +8,10 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: UnportalableMat
-  m_Shader: {fileID: 4800000, guid: 345d533eec7e28a4baf30fba04c6b4e1, type: 3}
+  m_Shader: {fileID: 4800000, guid: 64596900108e56b4a974610501570265, type: 3}
   m_ShaderKeywords: _NORMALMAP _PARALLAXMAP _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2050
   stringTagMap: {}
@@ -135,8 +135,8 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.036
     - _ParallaxStrength: 1
-    - _PortalTime1: 33.21005
-    - _PortalTime2: 2.6229675
+    - _PortalTime1: 165.29912
+    - _PortalTime2: 166.37515
     - _Shininess: 0.119
     - _SideScale: 0.2
     - _Smoothness: 0.1
@@ -158,10 +158,10 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _PlaneDir: {r: 0, g: 0, b: 0, a: 1}
     - _PlanePos: {r: 0, g: 0, b: 0, a: 1}
-    - _PortalPos1: {r: 1000, g: 1000, b: 1000, a: 0}
-    - _PortalPos2: {r: 1000, g: 1000, b: 1000, a: 0}
-    - _PortalRot1: {r: 0, g: 0, b: 0, a: 0}
-    - _PortalRot2: {r: 0, g: 0, b: 0, a: 0}
+    - _PortalPos1: {r: -3.1823044, g: 8.599998, b: -12.783531, a: 0}
+    - _PortalPos2: {r: 0.12010193, g: -25.486092, b: -16.800003, a: 0}
+    - _PortalRot1: {r: 4.712389, g: 0, b: 0, a: 0}
+    - _PortalRot2: {r: -0, g: 0, b: 0, a: 0}
     - _PortalScale1: {r: 0.5, g: 1, b: 0.1, a: 0}
     - _PortalScale2: {r: 1.9900001, g: 1, b: 0.5, a: 0}
     - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

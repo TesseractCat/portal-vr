@@ -13,9 +13,9 @@ public class LevelScriptableObject : ScriptableObject
     public GameObject visualPrefab;
     
     [Header("Config")]
-    public bool canPlaceOnWalls = true;
-    public bool canPlaceOnGround = true;
+    public Vector3Int canPlaceNormals = Vector3Int.one;
     public bool maxOne = false;
     public bool excludeWall = false;
     public bool decoration = false;
+    public bool connectable = false;
 }

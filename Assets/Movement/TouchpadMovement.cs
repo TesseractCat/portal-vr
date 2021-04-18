@@ -66,9 +66,9 @@ public class TouchpadMovement : MonoBehaviour {
         }*/
 
         //Handle elevation changes and falling
-        Ray ray = new Ray(lookCamera.transform.position + Vector3.up/2, -Vector3.up);
+        Ray ray = new Ray(lookCamera.transform.position + Vector3.up/4.0f, -Vector3.up);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground", "PortalTrigLayer")))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground", "Menu", "PortalTrigLayer")))
         {
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("PortalTrigLayer")/* || cameraInLastPortal()*/)
             {
@@ -85,7 +85,8 @@ public class TouchpadMovement : MonoBehaviour {
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("PortalTrigLayer")) {
                     lastPortal = hit.collider.gameObject.transform.parent;
                 }
-            } else if (hit.distance - Vector3.up.magnitude/2 < lookCamera.localPosition.y + 0.5 && hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") /*Lower elevation tolerance*/)
+            } else if (hit.distance - Vector3.up.magnitude/2 < lookCamera.localPosition.y + 0.5
+                    && (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") || hit.collider.gameObject.layer == LayerMask.NameToLayer("Menu")) /*Lower elevation tolerance*/)
             {
                 //Higher elevation, for example steps or a ramp. Also could be slightly lower elevation, no need to start falling for this type of thing.
                 transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, hit.point.y, transform.position.z), Time.deltaTime * 10);

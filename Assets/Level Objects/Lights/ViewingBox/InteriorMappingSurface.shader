@@ -42,6 +42,7 @@ Shader "Custom/InteriorMappingSurface"
                 float2 uv : TEXCOORD0;
                 float3 normal : NORMAL;
                 float4 tangent : TANGENT;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
             };
  
             struct v2f
@@ -54,6 +55,7 @@ Shader "Custom/InteriorMappingSurface"
             #endif
                 float3 viewDir : TEXCOORD1;
                 float3 worldPos : TEXCOORD2;
+                UNITY_VERTEX_OUTPUT_STEREO 
             };
  
             samplerCUBE _RoomCube;
@@ -70,6 +72,11 @@ Shader "Custom/InteriorMappingSurface"
             v2f vert (appdata v)
             {
                 v2f o;
+                
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_INITIALIZE_OUTPUT(v2f, o);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+                
                 o.pos = UnityObjectToClipPos(v.vertex);
                 o.worldPos = mul(unity_ObjectToWorld, v.vertex);
  

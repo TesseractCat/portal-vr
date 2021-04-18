@@ -31,6 +31,7 @@ Shader "CustomStandard/StandardStencilVertexLit" {
             CGPROGRAM
             #pragma vertex vert  
             #pragma fragment frag
+            #pragma multi_compile_instancing
      
             #include "UnityCG.cginc"
      
@@ -52,16 +53,23 @@ Shader "CustomStandard/StandardStencilVertexLit" {
                 fixed3 diff : COLOR;
                 fixed3 spec : TEXCOORD1;
                 float3 worldPos : TEXCOORD2;
+                UNITY_VERTEX_OUTPUT_STEREO 
             };
      
             v2f vert (appdata_full v)
             {
                 v2f o;
+                
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_INITIALIZE_OUTPUT(v2f, o);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+                
                 o.pos = UnityObjectToClipPos (v.vertex);
                 o.worldPos = mul(unity_ObjectToWorld, v.vertex);
                 o.uv_MainTex = TRANSFORM_TEX (v.texcoord, _MainTex);
                 
                 o.diff = ShadeVertexLights(v.vertex, v.normal) * _Color;
+                o.diff += _Emission.rgb;
                 
                 o.spec = 0;
                 
