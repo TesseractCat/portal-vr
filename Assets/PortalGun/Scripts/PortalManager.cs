@@ -53,7 +53,7 @@ public class PortalManager : MonoBehaviour {
             //Should be a good surface
             
             //Create portal projectile
-            //Instantiate(portalProjectiles[portal], position, Quaternion.LookRotation(direction));
+            Instantiate(portalProjectiles[portal], position, Quaternion.LookRotation(direction));
 
             var wallDist = Vector3.zero;
             GameObject tempPortal = null;

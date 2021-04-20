@@ -32,8 +32,8 @@ public class HandLerp : MonoBehaviour
     void OnTriggerStay(Collider c) {
         if (c.gameObject.tag == "Zone") {
             toLerp.position = Vector3.Lerp(toLerp.position, c.transform.position, Time.deltaTime * 50.0f);
-            //toLerp.rotation = Quaternion.Lerp(toLerp.rotation, Quaternion.LookRotation(c.transform.up, c.transform.forward), Time.deltaTime * 25.0f);
-            toLerp.rotation = Quaternion.Lerp(toLerp.rotation, Quaternion.LookRotation(c.transform.up, toLerp.transform.forward), Time.deltaTime * 25.0f);
+            toLerp.rotation = Quaternion.Lerp(toLerp.rotation, Quaternion.LookRotation(c.transform.up, c.transform.forward), Time.deltaTime * 25.0f);
+            //toLerp.rotation = Quaternion.Lerp(toLerp.rotation, Quaternion.LookRotation(c.transform.up, toLerp.transform.forward), Time.deltaTime * 25.0f);
         }
     }
     

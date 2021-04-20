@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2027561928407146925}
   - component: {fileID: 7199891498813373262}
   - component: {fileID: 7945259477887607306}
+  - component: {fileID: -6805019258194238266}
   m_Layer: 0
   m_Name: Portal Projectile Blue
   m_TagString: Untagged
@@ -4863,3 +4864,15 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &-6805019258194238266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4908398088408137944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29fd860672434464682ffd25c5dda78f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

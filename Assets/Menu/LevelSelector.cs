@@ -62,6 +62,7 @@ public class LevelSelector : MonoBehaviour
     }
     
     IEnumerator SelectLevelCoroutine() {
+        menuDoor.gameObject.SetActive(true);
         saveLoadHandler.Load(saveLoadHandler.levelPaths[selectedLevel], false);
         
         //Move level to align with menu door
@@ -118,6 +119,8 @@ public class LevelSelector : MonoBehaviour
         }
         foreach (Light l in gameObject.GetComponentsInChildren<Light>()) {
             l.enabled = true;
+            l.gameObject.SetActive(false);
+            l.gameObject.SetActive(true);
         }
     }
     

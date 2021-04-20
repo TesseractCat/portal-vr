@@ -11,6 +11,7 @@ public class TouchpadMovement : MonoBehaviour {
     public float speed;
 
     [Header("Object References")]
+    public Collider headCollider;
     public Transform lookCamera;
     public PostProcessVolume mainVolume;
     public InputActionReference movementAction;
@@ -21,10 +22,6 @@ public class TouchpadMovement : MonoBehaviour {
     Transform lastPortal = null;
     
     Vector2 touchpadAxis = Vector2.zero;
-    
-    //public void OnMove(InputAction.CallbackContext context) {
-    //    touchpadAxis = context.ReadValue<Vector2>();
-    //}
     
     void FixedUpdate () {
         touchpadAxis = movementAction.action.ReadValue<Vector2>();
@@ -64,41 +61,54 @@ public class TouchpadMovement : MonoBehaviour {
             mainVolume.profile.TryGetSettings(out vignetteLayer);
             vignetteLayer.active = false;
         }*/
+        //Calculate if in portal
+        bool inPortal = false;
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("PortalColl"))
+        {
+            if (g.GetComponent<Collider>().bounds.Contains(lookCamera.position))
+            {
+                inPortal = true;
+            }
+        }
 
         //Handle elevation changes and falling
-        Ray ray = new Ray(lookCamera.transform.position + Vector3.up/4.0f, -Vector3.up);
+        Ray ray = new Ray(lookCamera.transform.position + Vector3.up/10.0f, -Vector3.up);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground", "Menu", "PortalTrigLayer")))
         {
-            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("PortalTrigLayer")/* || cameraInLastPortal()*/)
+            if ((!onGround && inPortal) || hit.collider.gameObject.layer == LayerMask.NameToLayer("PortalTrigLayer"))
             {
-                //Player has stepped onto a portal, or fallen into one
-                /*if (onGround)
-                {
-                    GetComponent<Rigidbody>().velocity = currentDir * 100;
-                }*/
-                onGround = false;
-                //GetComponent<Rigidbody>().isKinematic = false;
-                GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
-                GetComponent<Rigidbody>().drag = 0.3f;
+                //If layer==PortalTrigLayer -> It's a non-wall portal
+                if (!(hit.collider.gameObject.layer == LayerMask.NameToLayer("PortalTrigLayer")) || Mathf.Abs(hit.collider.transform.parent.forward.y) > 0.1f) {
+                    //Player has stepped onto a portal, or fallen into one
+                    onGround = false;
 
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("PortalTrigLayer")) {
                     lastPortal = hit.collider.gameObject.transform.parent;
+                    //TODO: Disable headCollider here or something
+                    //headCollider.isTrigger = true;
+                    
+                    //Change rigidbody properties
+                    GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+                    GetComponent<Rigidbody>().drag = 0.3f;
                 }
-            } else if (hit.distance - Vector3.up.magnitude/2 < lookCamera.localPosition.y + 0.5
-                    && (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") || hit.collider.gameObject.layer == LayerMask.NameToLayer("Menu")) /*Lower elevation tolerance*/)
+            } else if (hit.distance - Vector3.up.magnitude/2 < lookCamera.localPosition.y + 0.25//0.5
+                    && (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") || hit.collider.gameObject.layer == LayerMask.NameToLayer("Menu")))
             {
                 //Higher elevation, for example steps or a ramp. Also could be slightly lower elevation, no need to start falling for this type of thing.
-                transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, hit.point.y, transform.position.z), Time.deltaTime * 10);
-                //transform.position = new Vector3(transform.position.x, hit.point.y, transform.position.z);
                 onGround = true;
+                
+                //Lerp position
+                transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, hit.point.y, transform.position.z), Time.deltaTime * 10);
+                //headCollider.isTrigger = false;
+                
+                //Change rigidbody properties
                 GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
                 GetComponent<Rigidbody>().drag = 10;
-
-            } else
-            {
+            } else {
                 //Player should be falling here (should limit movement)
                 onGround = false;
+                
+                //Change rigidbody properties
                 GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
                 GetComponent<Rigidbody>().drag = 0.3f;
             }
@@ -107,7 +117,7 @@ public class TouchpadMovement : MonoBehaviour {
         lastPos = transform.position;
     }
 
-    bool cameraInLastPortal()
+    /*bool cameraInLastPortal()
     {
         if (lastPortal != null && lookCamera != null)
         {
@@ -117,5 +127,5 @@ public class TouchpadMovement : MonoBehaviour {
         {
             return false;
         }
-    }
+    }*/
 }

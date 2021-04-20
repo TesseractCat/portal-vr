@@ -61,6 +61,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36e7bd94ff674bd41a3b9f66866c236d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  channel: -1
   leftSide: {fileID: 4859333335485512623}
   rightSide: {fileID: 71176491265886162}
   openSpeed: 5
@@ -118,6 +119,21 @@ PrefabInstance:
     - target: {fileID: 400008, guid: 819f15d6b23c9e548ab0d43459faf1a5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2958564429453124211, guid: 819f15d6b23c9e548ab0d43459faf1a5,
+        type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3168801080413827000, guid: 819f15d6b23c9e548ab0d43459faf1a5,
+        type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8006969144220274283, guid: 819f15d6b23c9e548ab0d43459faf1a5,
+        type: 3}
+      propertyPath: m_Convex
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 819f15d6b23c9e548ab0d43459faf1a5, type: 3}

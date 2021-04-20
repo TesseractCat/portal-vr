@@ -11,13 +11,17 @@ public class PortalGun : MonoBehaviour
     Rigidbody grabbedRigidbody;
     
     public void OnShoot1(InputAction.CallbackContext context) {
-        if (context.phase == InputActionPhase.Started)
+        if (context.phase == InputActionPhase.Started) {
             portalManager.ShootPortal(transform.position, transform.forward, 0, transform.rotation.eulerAngles.y);
+            Recoil();
+        }
     }
     
     public void OnShoot2(InputAction.CallbackContext context) {
-        if (context.phase == InputActionPhase.Started)
+        if (context.phase == InputActionPhase.Started) {
             portalManager.ShootPortal(transform.position, transform.forward, 1, transform.rotation.eulerAngles.y);
+            Recoil();
+        }
     }
     
     public void OnLaser(InputAction.CallbackContext context) {
@@ -49,5 +53,15 @@ public class PortalGun : MonoBehaviour
                     Vector3.Lerp(grabbedRigidbody.transform.position, grabTransform.position, Time.fixedDeltaTime * 25.0f));
             grabbedRigidbody.velocity = Vector3.zero;
         }
+    }
+    
+    void Recoil() {
+        transform.localPosition = new Vector3(0, 0.05f, 0);
+        transform.localRotation = Quaternion.Euler(-10.0f, 0, 0);
+    }
+    
+    void Update() {
+        transform.localPosition = Vector3.Lerp(transform.localPosition, Vector3.zero, Time.deltaTime * 10.0f);
+        transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.identity, Time.deltaTime * 10.0f);
     }
 }
