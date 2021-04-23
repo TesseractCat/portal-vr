@@ -71,7 +71,9 @@ public class PortalManager : MonoBehaviour {
                 
                 Transform tempDuplicate = (Transform)Instantiate(GameObject.FindObjectOfType<ProcLevelMesh>().transform);
                 //Remove unnessecary components
-                Destroy(tempDuplicate.GetComponent<Collider>());
+                foreach (Collider c in tempDuplicate.GetComponentsInChildren<Collider>()) {
+                    Destroy(c);
+                }
                 Destroy(tempDuplicate.GetComponent<ProcLevelMesh>());
                 
                 tempDuplicate.parent = tempDuplicateParent.transform;
@@ -80,7 +82,8 @@ public class PortalManager : MonoBehaviour {
                         //Set up shader stenciling
                         m.SetInt("_StencilMask", portal + 1);
                         m.SetInt("_StencilComp", 3);
-                        m.renderQueue = 2010;
+                        //m.renderQueue = 2010;
+                        m.renderQueue = m.renderQueue - 40;
                     }
                     
                     //Set up lighting layers

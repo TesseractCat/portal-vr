@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: GlassMat
-  m_Shader: {fileID: 4800000, guid: f7eefbebfcd7e2848a43592c16a11364, type: 3}
+  m_Shader: {fileID: 4800000, guid: 981a7559dcb42c0428fdd3c338913152, type: 3}
   m_ShaderKeywords: _ALPHAPREMULTIPLY_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -44,6 +44,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -87,4 +91,5 @@ Material:
     - _PlaneDir: {r: 0, g: 0, b: 0, a: 1}
     - _PlanePos: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.254717, g: 0.254717, b: 0.254717, a: 1}
+    - _TintColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5254902}
   m_BuildTextureStacks: []

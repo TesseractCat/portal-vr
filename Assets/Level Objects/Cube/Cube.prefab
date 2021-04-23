@@ -76,7 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fce35872a765604698167bd42be9348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visualsPrefab: {fileID: 919132149155446097, guid: 0c56dec601fc0f242b70de74685f10ce,
+  visualsPrefab: {fileID: 8271707075191426068, guid: 87d21f78adad2484796370370ced2bfc,
     type: 3}
   dynamicPosition: 1
   onlyOneDuplicate: -1

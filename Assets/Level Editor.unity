@@ -248,7 +248,6 @@ MonoBehaviour:
   levelMesh: {fileID: 309833833}
   saveLoadHandler: {fileID: 309833838}
   guiSkin: {fileID: 11400000, guid: 7efa5cdcd3c5a6b4aa72be33fa390b7d, type: 2}
-  connectionChannels: 16
 --- !u!1 &1467769528
 GameObject:
   m_ObjectHideFlags: 0

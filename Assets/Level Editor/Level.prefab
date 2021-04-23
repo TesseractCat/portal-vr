@@ -70,8 +70,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6ff9a1faf33f45d41af153b8e9b06839, type: 2}
   - {fileID: 11400000, guid: aa484c742d760da4aa5bd9c11f156207, type: 2}
   - {fileID: 11400000, guid: 3c306e43082f6d949aaf3da2abfc73bc, type: 2}
+  - {fileID: 11400000, guid: 916a8e5210d99854c927b02ccaa336fe, type: 2}
+  - {fileID: 11400000, guid: 554bc443b5d8bed4386e8fc7c9ef7bdc, type: 2}
+  - {fileID: 11400000, guid: 59355e1486076e447981e4340472a9aa, type: 2}
+  - {fileID: 11400000, guid: 4713511dd769e9342ae14a5bd3d82486, type: 2}
+  - {fileID: 11400000, guid: 975a8b1eab703284a858716cad7d2d75, type: 2}
   selectablePrefab: {fileID: 8983319234528231407, guid: e5aac8e9621b94740b9e3268979d9371,
     type: 3}
+  connectionChannels: 16
 --- !u!33 &550111672898090900
 MeshFilter:
   m_ObjectHideFlags: 0

@@ -26,11 +26,6 @@ public class HandleCameraTeleport : MonoBehaviour {
                     flipRot * c.transform.parent.InverseTransformDirection(transform.parent.GetComponent<Rigidbody>().velocity));
         }
     }
-    
-    /*IEnumerator ResetLastUsedPortal() {
-        yield return new WaitForSeconds(0.5f);
-        lastUsedPortal = null;
-    }*/
 
     void FixedUpdate()
     {

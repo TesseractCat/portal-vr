@@ -14,7 +14,7 @@ Shader "CustomStandard/StandardStencilVertexLit" {
     }
      
     SubShader {
-        Tags {"Queue"="Geometry"  "IgnoreProjector"="True"}
+        Tags {"Queue"="Geometry+50"  "IgnoreProjector"="True"}
         LOD 100
      
         ZWrite On

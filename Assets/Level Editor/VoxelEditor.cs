@@ -14,6 +14,8 @@ public class PlacedObject {
     
     public JsonQuaternion rotation;
     
+    public Dictionary<string, object> properties;
+    
     public int connection = -1;
 }
 
@@ -319,6 +321,10 @@ public class VoxelEditor : MonoBehaviour
         if (GUILayout.Button("Delete")) {
             GameObject.Destroy(highlightedObject.gameObject);
             currentLevel.levelObjects.RemoveAt(levelObjectIdx);
+            if (highlightedScriptableObject.excludeWall) {
+                //TODO: Remove excluded wall
+                levelMesh.Generate();
+            }
         }
     }
     

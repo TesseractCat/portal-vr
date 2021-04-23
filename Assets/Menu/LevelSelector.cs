@@ -65,13 +65,22 @@ public class LevelSelector : MonoBehaviour
         menuDoor.gameObject.SetActive(true);
         saveLoadHandler.Load(saveLoadHandler.levelPaths[selectedLevel], false);
         
+        //Reset map and level objects
+        mapParent.transform.position = new Vector3(-100, -100, -100);
+        mapParent.transform.rotation = Quaternion.identity;
+        levelObjectsParent.transform.position = Vector3.zero;
+        levelObjectsParent.transform.rotation = Quaternion.identity;
+        
+        yield return new WaitForSeconds(0.1f);
+        
         //Move level to align with menu door
         Transform entryDoor = GameObject.Find("Entry Door").transform;
         //Assuming the doors are always on non-sloped walls
-        Quaternion offsetRot = Quaternion.AngleAxis(
-                (menuDoor.eulerAngles.y - entryDoor.eulerAngles.y) + 180, Vector3.up);
-        mapParent.transform.Rotate(offsetRot.eulerAngles);
-        levelObjectsParent.transform.Rotate(offsetRot.eulerAngles);
+        //Quaternion offsetRot = Quaternion.AngleAxis(
+        //        (menuDoor.eulerAngles.y - entryDoor.eulerAngles.y) + 180, Vector3.up);
+        float offsetRot = (menuDoor.eulerAngles.y - entryDoor.eulerAngles.y) + 180;
+        mapParent.transform.RotateAround(Vector3.zero, Vector3.up, offsetRot);
+        levelObjectsParent.transform.RotateAround(Vector3.zero, Vector3.up, offsetRot);
         
         Vector3 offset = menuDoor.position - entryDoor.position;
         mapParent.transform.position += offset;

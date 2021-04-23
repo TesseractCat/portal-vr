@@ -74,7 +74,7 @@ public class TouchpadMovement : MonoBehaviour {
         //Handle elevation changes and falling
         Ray ray = new Ray(lookCamera.transform.position + Vector3.up/10.0f, -Vector3.up);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground", "Menu", "PortalTrigLayer")))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground", "Menu", "PortalTrigLayer", "LightBridge")))
         {
             if ((!onGround && inPortal) || hit.collider.gameObject.layer == LayerMask.NameToLayer("PortalTrigLayer"))
             {
@@ -92,7 +92,9 @@ public class TouchpadMovement : MonoBehaviour {
                     GetComponent<Rigidbody>().drag = 0.3f;
                 }
             } else if (hit.distance - Vector3.up.magnitude/2 < lookCamera.localPosition.y + 0.25//0.5
-                    && (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") || hit.collider.gameObject.layer == LayerMask.NameToLayer("Menu")))
+                    && (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") ||
+                        hit.collider.gameObject.layer == LayerMask.NameToLayer("Menu") ||
+                        hit.collider.gameObject.layer == LayerMask.NameToLayer("LightBridge")))
             {
                 //Higher elevation, for example steps or a ramp. Also could be slightly lower elevation, no need to start falling for this type of thing.
                 onGround = true;
@@ -116,16 +118,4 @@ public class TouchpadMovement : MonoBehaviour {
 
         lastPos = transform.position;
     }
-
-    /*bool cameraInLastPortal()
-    {
-        if (lastPortal != null && lookCamera != null)
-        {
-            return lastPortal.Find("GeneralCollider").GetComponent<Collider>().bounds.Contains(lookCamera.position);
-        }
-        else
-        {
-            return false;
-        }
-    }*/
 }

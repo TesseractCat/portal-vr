@@ -7,6 +7,7 @@ public class PortalObject : MonoBehaviour
 {
     public GameObject visualsPrefab;
     public bool dynamicPosition = true;
+    public bool syncScale = false;
     public int onlyOneDuplicate = -1;
     
     GameObject[] visualClones;
@@ -17,7 +18,18 @@ public class PortalObject : MonoBehaviour
     {
         mapParent = FindObjectOfType<ProcLevelMesh>().transform;
         portalManager = FindObjectOfType<PortalManager>();
-        portalManager.portalsLinkedEvent.AddListener(OnPortalsLinked);
+        if (portalManager != null)
+            portalManager.portalsLinkedEvent.AddListener(OnPortalsLinked);
+    }
+    
+    void OnDestroy() {
+        if (visualClones != null) {
+            foreach (GameObject c in visualClones) {
+                if (c != null) {
+                    GameObject.Destroy(c);
+                }
+            }
+        }
     }
     
     void OnTriggerExit (Collider c)
@@ -69,7 +81,7 @@ public class PortalObject : MonoBehaviour
         }
     }
     
-    void OnPortalsLinked()
+    public void OnPortalsLinked()
     {
         if (visualClones == null) {
             visualClones = new GameObject[2];
@@ -82,6 +94,11 @@ public class PortalObject : MonoBehaviour
                 
                 if (visualClones[i].GetComponent<PortalObject>() != null)
                     GameObject.Destroy(visualClones[i].GetComponent<PortalObject>());
+                
+                //Destroy colliders
+                foreach (Collider c in visualClones[i].GetComponentsInChildren<Collider>()) {
+                    Destroy(c);
+                }
                 
                 int layer = LayerMask.NameToLayer("Portal" + (i + 1).ToString() + "LightMask");
                 ConfigureClone(visualClones[i], layer, i + 1, true,
@@ -113,7 +130,11 @@ public class PortalObject : MonoBehaviour
                     portalManager.levelDuplicates[i].transform.GetChild(0).TransformPoint(mapRelativePosition);
                 
                 visualClones[i].transform.rotation =
-                    portalManager.levelDuplicates[i].transform.GetChild(0).rotation * transform.rotation;
+                    portalManager.levelDuplicates[i].transform.GetChild(0).rotation
+                    * (Quaternion.Inverse(mapParent.rotation) * transform.rotation);
+                
+                if (syncScale)
+                    visualClones[i].transform.localScale = transform.localScale;
             }
         }
     }
@@ -142,6 +163,7 @@ public class PortalObject : MonoBehaviour
                 
                 //So the object isn't masked by the depth mask
                 m.renderQueue = 2000;
+                //m.renderQueue = m.renderQueue - 50;
             }
         }
     }
