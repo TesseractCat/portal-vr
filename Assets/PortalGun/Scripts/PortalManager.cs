@@ -19,10 +19,6 @@ public class PortalManager : MonoBehaviour {
     [System.NonSerialized]
     public GameObject[] levelDuplicates = new GameObject[2];
     
-    void Start() {
-        
-    }
-    
     public void ShootPortal(Vector3 position, Vector3 direction, int portal, float rotY) {
         Debug.Assert(portal == 0 || portal == 1);
         
@@ -30,12 +26,13 @@ public class PortalManager : MonoBehaviour {
         
         //Raycast to create portal
         RaycastHit hit;
-        int layerMask = LayerMask.GetMask("Ground", "PortalTrigLayer");
+        int layerMask = LayerMask.GetMask("Ground", "PortalTrigLayer", "StopPortal");
         if (Physics.Raycast(position, direction, out hit, Mathf.Infinity, layerMask))
         {
             //Prevent shooting a portal on another portal
-            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("PortalTrigLayer")
-                    && hit.collider.transform.parent.gameObject != portals[portal]) {
+            if ((hit.collider.gameObject.layer == LayerMask.NameToLayer("PortalTrigLayer")
+                    && hit.collider.transform.parent.gameObject != portals[portal])
+                    || hit.collider.gameObject.layer == LayerMask.NameToLayer("StopPortal")) {
                 //Could shoot a portal through a portal here
                 return;
             } else if (hit.collider.gameObject.layer == LayerMask.NameToLayer("PortalTrigLayer") &&
@@ -203,7 +200,7 @@ public class PortalManager : MonoBehaviour {
             Vector3 raycastPos = portal.TransformPoint(0.0f, 0.0f, -0.1f);
             Vector3 raycastDir = portal.TransformDirection(testDirs[i]);
 
-            if (Physics.Raycast(raycastPos, raycastDir, out hit, testDists[i], (1 << LayerMask.NameToLayer("Ground"))))
+            if (Physics.Raycast(raycastPos, raycastDir, out hit, testDists[i], LayerMask.GetMask("Ground", "StopPortal")))
             {
                 var offset = (hit.point - raycastPos);
                 var newOffset = -raycastDir * (testDists[i] - offset.magnitude);
@@ -265,8 +262,6 @@ public class PortalManager : MonoBehaviour {
                 
                 //Activate and set clip plane
                 levelDuplicates[pair.Item1].SetActive(true);
-                //levelDuplicates[pair.Item1].GetComponentInChildren<DuplicateLevelObjects>().duplicateIndex = pair.Item1;
-                //levelDuplicates[pair.Item1].GetComponentInChildren<DuplicateLevelObjects>().enabled = true;
                 
                 foreach (Renderer r in levelDuplicates[pair.Item1].GetComponentsInChildren<Renderer>()) {
                     foreach (Material m in r.materials) {
@@ -289,17 +284,6 @@ public class PortalManager : MonoBehaviour {
                 levelDuplicates[pair.Item1].transform.rotation =
                     Quaternion.LookRotation(-portals[pair.Item2].transform.forward, portals[pair.Item2].transform.up);
             }
-            //Handle stencil mask render queues (I don't think this is necessary anymore)
-            /*if (Vector3.Scale(portals[1].transform.position, portals[0].transform.forward).magnitude >
-                    Vector3.Scale(portals[0].transform.position, portals[0].transform.forward).magnitude)
-            {
-                portals[1].transform.Find("StencilModel").GetComponent<Renderer>().material.renderQueue = 1800;
-                portals[0].transform.Find("StencilModel").GetComponent<Renderer>().material.renderQueue = 1900;
-            } else
-            {
-                portals[1].transform.Find("StencilModel").GetComponent<Renderer>().material.renderQueue = 1900;
-                portals[0].transform.Find("StencilModel").GetComponent<Renderer>().material.renderQueue = 1800;
-            }*/
             
             portalsLinkedEvent.Invoke();
         }

@@ -65,7 +65,9 @@ PrefabInstance:
     - target: {fileID: 4712879315450915540, guid: 210819e16d5325043b08aaf3ebb848fb,
         type: 3}
       propertyPath: m_Name
-      value: Entry Door
+      value: Entry Door Visual
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9036008147346700265, guid: 210819e16d5325043b08aaf3ebb848fb, type: 3}
+    - {fileID: -479539277119717158, guid: 210819e16d5325043b08aaf3ebb848fb, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 210819e16d5325043b08aaf3ebb848fb, type: 3}

@@ -12,9 +12,12 @@ public class LevelScriptableObject : ScriptableObject
     public GameObject objectPrefab;
     public GameObject visualPrefab;
     
-    [Header("Config")]
+    [Header("Placement")]
     public Vector3Int canPlaceNormals = Vector3Int.one;
+    public bool rotatable = true;
     public bool maxOne = false;
+    
+    [Header("Config")]
     public bool excludeWall = false;
     public bool decoration = false;
     public bool connectable = false;

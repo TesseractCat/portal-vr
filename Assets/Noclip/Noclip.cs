@@ -11,6 +11,9 @@ public class Noclip : MonoBehaviour
     [Header("Object References")]
     public PortalManager portalManager;
     public Camera camera;
+    public Transform grabPoint;
+    
+    Rigidbody grabbedObject;
     
     void FixedUpdate()
     {
@@ -31,21 +34,49 @@ public class Noclip : MonoBehaviour
         if (c.gameObject.tag == "PortalColl" && c.transform.parent.InverseTransformPoint(transform.position).z > 0.01f)
         {
             Quaternion flipRot = Quaternion.AngleAxis(180.0f, c.transform.parent.up);
-            transform.position = c.transform.parent.GetComponentInChildren<CorrespondingPortal>().correspondingPortal.TransformPoint(
+            Transform correspondingPortal = c.transform.parent.GetComponentInChildren<CorrespondingPortal>().correspondingPortal;
+            
+            transform.position = correspondingPortal.TransformPoint(
                     flipRot * c.transform.parent.InverseTransformPoint(transform.position));
             
-            transform.forward = c.transform.parent.GetComponentInChildren<CorrespondingPortal>().correspondingPortal.TransformDirection(
+            transform.forward = correspondingPortal.TransformDirection(
                     flipRot * c.transform.parent.InverseTransformDirection(transform.forward));
+            
+            c.transform.parent.GetComponentInChildren<ShaderTimeOnSpawn>().SetTime();
         }
     }
     
     void Update() {
         var mouse = Mouse.current;
+        var keyboard = Keyboard.current;
+        
+        if (grabbedObject != null) {
+            grabbedObject.velocity = Vector3.zero;
+            grabbedObject.MovePosition(grabPoint.position);
+        }
+        
         if (mouse.leftButton.wasPressedThisFrame) {
             portalManager.ShootPortal(transform.position, camera.transform.forward, 0, 0);
         }
         if (mouse.rightButton.wasPressedThisFrame) {
             portalManager.ShootPortal(transform.position, camera.transform.forward, 1, 45);
+        }
+        
+        if (keyboard.fKey.wasPressedThisFrame) {
+            if (grabbedObject != null) {
+                grabbedObject = null;
+                return;
+            }
+            
+            RaycastHit hit;
+            if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, Mathf.Infinity, LayerMask.GetMask("Default"))) {
+                if (hit.collider.gameObject.tag == "Zone") {
+                    StandingButtonActivator a = hit.collider.gameObject.GetComponentInParent<StandingButtonActivator>();
+                    a.Pressed();
+                } else if (hit.collider.gameObject.tag == "Moveable") {
+                    grabbedObject = hit.collider.GetComponent<Rigidbody>();
+                }
+            }
         }
     }
 }

@@ -5,11 +5,18 @@ using UnityEngine.Events;
 
 public abstract class Activator : MonoBehaviour
 {
+    public virtual Dictionary<string, object> properties {
+        get {
+            return new Dictionary<string, object>() { };
+        }
+        set {
+            return;
+        }
+    }
+    
     public int channel = -1;
     public List<Activatable> connectedList;
     
-    public bool oneShot = false;
-    public bool toggle = false;
     public bool activated = false;
     
     public virtual void Activate() {

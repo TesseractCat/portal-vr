@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -81,17 +82,47 @@ public class SaveLoadHandler : MonoBehaviour
         levelMesh.ClearLevel();
         
         //Place objects
-        foreach (KeyValuePair<JsonVector3Int, PlacedObject> kv in l.levelObjects) {
+        for (int i = 0; i < l.levelObjects.Count; i++) {
+            KeyValuePair<JsonVector3Int, PlacedObject> kv = l.levelObjects[i];
+            
             Transform tempObj = PlaceObject(kv.Value, kv.Key, visual);
             
             //Configure channel
-            if (!visual) {
-                Activator activator = tempObj.GetComponentInChildren<Activator>();
-                Activatable activatable = tempObj.GetComponentInChildren<Activatable>();
-                if (activator != null)
-                    activator.channel = kv.Value.connection;
-                if (activatable != null)
-                    activatable.channel = kv.Value.connection;
+            Activator activator = tempObj.GetComponentInChildren<Activator>();
+            Activatable activatable = tempObj.GetComponentInChildren<Activatable>();
+            
+            //Load properties
+            if (l.levelObjects[i].Value.properties == null)
+                l.levelObjects[i].Value.properties = new Dictionary<string, object>();
+            if (activator != null) {
+                activator.channel = kv.Value.connection;
+                //Iterate through all property keys
+                foreach (string k in activator.properties.Keys) {
+                    if (!l.levelObjects[i].Value.properties.ContainsKey(k)) {
+                        l.levelObjects[i].Value.properties[k] = activator.properties[k];
+                    }
+                }
+                //Remove all extraneous properties
+                var extraneousKeys = new List<String>(l.levelObjects[i].Value.properties.Where(kvp => !activator.properties.ContainsKey(kvp.Key)).Select(j => j.Key));
+                foreach (string k in extraneousKeys)
+                    l.levelObjects[i].Value.properties.Remove(k);
+                //Finally, update the objects properties
+                activator.properties = l.levelObjects[i].Value.properties;
+            }
+            if (activatable != null) {
+                activatable.channel = kv.Value.connection;
+                //Iterate through all property keys
+                foreach (string k in activatable.properties.Keys) {
+                    if (!l.levelObjects[i].Value.properties.ContainsKey(k)) {
+                        l.levelObjects[i].Value.properties[k] = activatable.properties[k];
+                    }
+                }
+                //Remove all extraneous properties
+                var extraneousKeys = new List<String>(l.levelObjects[i].Value.properties.Where(kvp => !activatable.properties.ContainsKey(kvp.Key)).Select(j => j.Key));
+                foreach (string k in extraneousKeys)
+                    l.levelObjects[i].Value.properties.Remove(k);
+                //Finally, update the objects properties
+                activatable.properties = l.levelObjects[i].Value.properties;
             }
         }
         

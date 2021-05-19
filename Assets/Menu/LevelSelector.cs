@@ -63,13 +63,14 @@ public class LevelSelector : MonoBehaviour
     
     IEnumerator SelectLevelCoroutine() {
         menuDoor.gameObject.SetActive(true);
-        saveLoadHandler.Load(saveLoadHandler.levelPaths[selectedLevel], false);
         
         //Reset map and level objects
         mapParent.transform.position = new Vector3(-100, -100, -100);
         mapParent.transform.rotation = Quaternion.identity;
         levelObjectsParent.transform.position = Vector3.zero;
         levelObjectsParent.transform.rotation = Quaternion.identity;
+        
+        saveLoadHandler.Load(saveLoadHandler.levelPaths[selectedLevel], false);
         
         yield return new WaitForSeconds(0.1f);
         

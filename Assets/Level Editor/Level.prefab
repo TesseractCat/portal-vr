@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 550111672898090898}
   m_Layer: 12
   m_Name: Level
-  m_TagString: Untagged
+  m_TagString: Level
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -75,6 +75,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 59355e1486076e447981e4340472a9aa, type: 2}
   - {fileID: 11400000, guid: 4713511dd769e9342ae14a5bd3d82486, type: 2}
   - {fileID: 11400000, guid: 975a8b1eab703284a858716cad7d2d75, type: 2}
+  - {fileID: 11400000, guid: b1eb689e284f3c8449324c672333ebcd, type: 2}
   selectablePrefab: {fileID: 8983319234528231407, guid: e5aac8e9621b94740b9e3268979d9371,
     type: 3}
   connectionChannels: 16

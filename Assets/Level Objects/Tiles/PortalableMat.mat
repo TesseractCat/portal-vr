@@ -135,8 +135,8 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.036
     - _ParallaxStrength: 1
-    - _PortalTime1: 113.48336
-    - _PortalTime2: 115.36218
+    - _PortalTime1: 240.36006
+    - _PortalTime2: 239.3262
     - _Shininess: 0.119
     - _SideScale: 0.2
     - _Smoothness: 0.1
@@ -158,10 +158,10 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _PlaneDir: {r: 0, g: 0, b: 0, a: 1}
     - _PlanePos: {r: 0, g: 0, b: 0, a: 1}
-    - _PortalPos1: {r: 21.174568, g: 0.23930359, b: -4.8000107, a: 0}
-    - _PortalPos2: {r: 19.5196, g: 0.18345642, b: -4.8000107, a: 0}
-    - _PortalRot1: {r: -0, g: -0.000000119209275, b: 0, a: 0}
-    - _PortalRot2: {r: -0, g: -0.000000119209275, b: 0, a: 0}
+    - _PortalPos1: {r: -6, g: 0.019992352, b: -26.213783, a: 0}
+    - _PortalPos2: {r: -16.991745, g: 5.175165, b: 0.0000076293945, a: 0}
+    - _PortalRot1: {r: -0, g: -1.5707964, b: 0, a: 0}
+    - _PortalRot2: {r: -0, g: 0, b: 0, a: 0}
     - _PortalScale1: {r: 0.5, g: 1, b: 0.1, a: 0}
     - _PortalScale2: {r: 0.50014395, g: 1.9900001, b: 0.9880032, a: 0}
     - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

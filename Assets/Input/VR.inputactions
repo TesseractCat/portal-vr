@@ -108,6 +108,17 @@
                 },
                 {
                     "name": "",
+                    "id": "3251ef28-cd1b-4c26-ba71-05d73847086c",
+                    "path": "<ViveController>{LeftHand}/trackpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "8af652e4-cc6a-4eb3-bce3-000d52349d88",
                     "path": "<XRController>{LeftHand}/joystick",
                     "interactions": "",
@@ -130,6 +141,17 @@
                 },
                 {
                     "name": "",
+                    "id": "814065a1-c123-400c-87e8-09b0fa8594c2",
+                    "path": "<ViveController>{RightHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Portal 1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "1faa91fe-f18e-4f7b-a329-3d30410ca357",
                     "path": "<XRController>{RightHand}/primaryButton",
                     "interactions": "",
@@ -143,6 +165,17 @@
                     "name": "",
                     "id": "6091f436-7ce3-427a-95ab-1802dcaf455d",
                     "path": "<WMRSpatialController>{RightHand}/touchpadClicked",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Portal 2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "47801e8d-a6f7-49be-831e-5aaca9961b64",
+                    "path": "<ViveController>{RightHand}/trackpadClicked",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -218,6 +251,17 @@
                 },
                 {
                     "name": "",
+                    "id": "aae8fb74-d42a-465d-9b2e-f0250ae4beec",
+                    "path": "<ViveController>{RightHand}/gripButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Grab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "7bb6bbdf-fa97-4ad3-9e0e-c672c7809e6a",
                     "path": "<XRController>{RightHand}/gripPressed",
                     "interactions": "",
@@ -231,6 +275,17 @@
                     "name": "",
                     "id": "39801fac-0503-4c9d-9ecc-bb20e3139a6a",
                     "path": "<WMRSpatialController>/menu",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "78a3ea0f-2d66-470d-9de9-85685224ef40",
+                    "path": "<ViveController>/menu",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -262,6 +317,17 @@
                 },
                 {
                     "name": "",
+                    "id": "34dfe873-5b46-46a3-8054-8d6b4922cb23",
+                    "path": "<ViveController>/trackpadTouched",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Laser",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "1247c455-140f-41fe-9f02-ab37989d0b38",
                     "path": "<XRController>{RightHand}/primaryTouched",
                     "interactions": "",
@@ -275,6 +341,17 @@
                     "name": "",
                     "id": "6d81083b-f47d-4701-8d5a-8ff4b667c468",
                     "path": "<WMRSpatialController>{LeftHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Activate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1889e8d0-153b-4983-bc1b-d4d471fea401",
+                    "path": "<ViveController>{LeftHand}/triggerPressed",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

@@ -42,13 +42,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1501288744161754}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1fce35872a765604698167bd42be9348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visualsPrefab: {fileID: 1501288744161754}
+  visualsPrefab: {fileID: 5980905615558711520, guid: df6eb4c4cce0364499bd07743cc783c5,
+    type: 3}
   dynamicPosition: 0
+  syncScale: 0
   onlyOneDuplicate: -1
 --- !u!114 &-2134991590239363861
 MonoBehaviour:

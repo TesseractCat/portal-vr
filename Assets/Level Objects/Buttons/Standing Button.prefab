@@ -216,6 +216,7 @@ Transform:
   - {fileID: 1261241506}
   - {fileID: 7018944888544118187}
   - {fileID: 1063671906738654063}
+  - {fileID: 5306877586257887458}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -234,6 +235,7 @@ MonoBehaviour:
   visualsPrefab: {fileID: 4151424699308123797, guid: f68e94f3c23281b4ab98daec54f84e6a,
     type: 3}
   dynamicPosition: 0
+  syncScale: 0
   onlyOneDuplicate: -1
 --- !u!114 &8766071795291194687
 MonoBehaviour:
@@ -247,12 +249,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51301f6c2e68ce94da1fc691bfde6e0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connected: {fileID: 0}
-  oneShot: 0
-  toggle: 0
+  channel: -1
+  connectedList: []
   activated: 0
   pressAction: {fileID: -2695670528859244783, guid: 6599292e3c1504b4dac6caa79233cc71,
     type: 3}
+--- !u!1 &8936906877306309133
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5306877586257887458}
+  - component: {fileID: 9043665793978971456}
+  m_Layer: 20
+  m_Name: Stop Portal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5306877586257887458
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8936906877306309133}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.135, y: 0.181, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_Children: []
+  m_Father: {fileID: 6198800203217167698}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &9043665793978971456
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8936906877306309133}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.7, y: 2, z: 2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1229474363379513875
 PrefabInstance:
   m_ObjectHideFlags: 0

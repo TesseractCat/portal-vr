@@ -24,6 +24,9 @@ public class HandleCameraTeleport : MonoBehaviour {
             //Handle velocity
             transform.parent.GetComponent<Rigidbody>().velocity = lastSyncedPortal.TransformDirection(
                     flipRot * c.transform.parent.InverseTransformDirection(transform.parent.GetComponent<Rigidbody>().velocity));
+            
+            //Portal Dissolve
+            c.transform.parent.GetComponentInChildren<ShaderTimeOnSpawn>().SetTime();
         }
     }
 

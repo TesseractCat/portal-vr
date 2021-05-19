@@ -4,21 +4,38 @@ using UnityEngine;
 
 public class Beam : Activatable
 {
+    [Header("Object References")]
     public GameObject beamPrefab;
     public Transform emissionPoint;
+    
+    [Header("Config")]
+    public bool canPortal = true;
+    
     Transform beamInstance;
     Transform duplicateBeam;
     
-    bool activated = true;
+    bool activated = false;
+    
+    private Dictionary<string, object> _properties = new Dictionary<string, object>() {
+        {"Start On", true}
+    };
+    public override Dictionary<string, object> properties {
+        get {
+            return _properties;
+        }
+        set {
+            _properties = value;
+        }
+    }
     
     void Start()
     {
-        beamInstance = Instantiate(beamPrefab, emissionPoint.position, transform.rotation, transform).transform;
-        
         PortalManager portalManager = FindObjectOfType<PortalManager>();
         if (portalManager != null) {
             portalManager.portalsLinkedEvent.AddListener(OnPortalsLinked);
-            OnPortalsLinked();
+
+            if ((bool)_properties["Start On"])
+                Activate();
         }
     }
 
@@ -34,14 +51,13 @@ public class Beam : Activatable
         if (Physics.Raycast(emissionPoint.position, transform.up, out hit, Mathf.Infinity, LayerMask.GetMask("Ground", "PortalTrigLayer"))) {
             beamInstance.localScale = new Vector3(1, hit.distance + 0.5f, 1);
             
-            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("PortalTrigLayer")) {
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("PortalTrigLayer") && canPortal) {
                 Transform correspondingPortal = hit.collider.transform.parent.GetComponent<CorrespondingPortal>().correspondingPortal;
                 Vector3 inversePoint = hit.collider.transform.parent.InverseTransformPoint(hit.point);
                 inversePoint = Quaternion.AngleAxis(180, Vector3.up) * inversePoint;
                 Quaternion inverseRotation = Quaternion.AngleAxis(180, Vector3.up) * Quaternion.Inverse(hit.collider.transform.parent.rotation) * transform.rotation;
                 
                 GameObject tempBeam = Instantiate(beamPrefab, correspondingPortal.TransformPoint(inversePoint), correspondingPortal.rotation * inverseRotation, transform);
-                tempBeam.GetComponent<PortalObject>().OnPortalsLinked();
                 
                 duplicateBeam = tempBeam.transform;
                 
@@ -54,6 +70,10 @@ public class Beam : Activatable
     }
     
     public override void Activate() {
+        if (activated)
+            return;
+        
+        beamInstance = Instantiate(beamPrefab, emissionPoint.position, transform.rotation, transform).transform;
         activated = true;
         OnPortalsLinked();
     }
@@ -61,7 +81,7 @@ public class Beam : Activatable
     public override void Deactivate() {
         activated = false;
         if (beamInstance != null)
-            GameObject.Destroy(beamInstance);
+            GameObject.Destroy(beamInstance.gameObject);
         if (duplicateBeam != null)
             GameObject.Destroy(duplicateBeam.gameObject);
     }

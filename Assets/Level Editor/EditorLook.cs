@@ -46,7 +46,7 @@ public class EditorLook : MonoBehaviour
                     transform.position.z);
         }
         
-        targetZoom = Mathf.Clamp(targetZoom, -50.0f, -2.5f);
+        targetZoom = Mathf.Clamp(targetZoom, -100.0f, -2.5f);
         
         camera.transform.localPosition = Vector3.Lerp(camera.transform.localPosition, new Vector3(0, 0, targetZoom), Time.deltaTime * 10.0f);
     }

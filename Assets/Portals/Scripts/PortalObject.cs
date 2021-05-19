@@ -14,12 +14,20 @@ public class PortalObject : MonoBehaviour
     PortalManager portalManager;
     Transform mapParent;
     
-    void Awake()
+    bool inPortal = false;
+    
+    void Start()
     {
-        mapParent = FindObjectOfType<ProcLevelMesh>().transform;
+        mapParent = GameObject.FindWithTag("Level").transform;
         portalManager = FindObjectOfType<PortalManager>();
-        if (portalManager != null)
+        if (portalManager != null) {
             portalManager.portalsLinkedEvent.AddListener(OnPortalsLinked);
+            
+            //Check to see if we need to sync on spawn
+            if (portalManager.portals[0] != null && portalManager.portals[1] != null) {
+                OnPortalsLinked();
+            }
+        }
     }
     
     void OnDestroy() {
@@ -32,6 +40,14 @@ public class PortalObject : MonoBehaviour
         }
     }
     
+    void OnTriggerEnter (Collider c)
+    {
+        if (c.gameObject.tag == "PortalColl") {
+            int portalIndex = (c.transform.parent.gameObject == portalManager.portals[0] ? 0 : 1);
+            EnterPortal(portalIndex);
+        }
+    }
+    
     void OnTriggerExit (Collider c)
     {
         if (!dynamicPosition)
@@ -39,6 +55,8 @@ public class PortalObject : MonoBehaviour
         
         if (c.gameObject.tag == "PortalColl") {
             gameObject.layer = LayerMask.NameToLayer("Default");
+            int portalIndex = (c.transform.parent.gameObject == portalManager.portals[0] ? 0 : 1);
+            ExitPortal(portalIndex);
         }
     }
     
@@ -51,7 +69,6 @@ public class PortalObject : MonoBehaviour
                 c.transform.parent.GetComponentInChildren<CorrespondingPortal>().correspondingPortal == null)
             return;
         
-        //Layer
         if (c.gameObject.tag == "PortalColl" && gameObject.layer != LayerMask.NameToLayer("PortalFrameLayer")) {
             gameObject.layer = LayerMask.NameToLayer("PortalFrameLayer");
             
@@ -99,21 +116,19 @@ public class PortalObject : MonoBehaviour
                 foreach (Collider c in visualClones[i].GetComponentsInChildren<Collider>()) {
                     Destroy(c);
                 }
-                
-                int layer = LayerMask.NameToLayer("Portal" + (i + 1).ToString() + "LightMask");
-                ConfigureClone(visualClones[i], layer, i + 1, true,
-                        portalManager.portals[i].GetComponent<CorrespondingPortal>().correspondingPortal.position,
-                        -portalManager.portals[i].GetComponent<CorrespondingPortal>().correspondingPortal.forward);
             }
-        } else {
-            for (int i = 0; i <= 1; i++) {
-                if (onlyOneDuplicate != -1 && onlyOneDuplicate != i)
-                    continue;
-                
+        }
+        for (int i = 0; i <= 1; i++) {
+            if (onlyOneDuplicate != -1 && onlyOneDuplicate != i)
+                continue;
+            
+            if (!inPortal) {
                 int layer = LayerMask.NameToLayer("Portal" + (i + 1).ToString() + "LightMask");
                 ConfigureClone(visualClones[i], layer, i + 1, true,
                         portalManager.portals[i].GetComponent<CorrespondingPortal>().correspondingPortal.position,
                         -portalManager.portals[i].GetComponent<CorrespondingPortal>().correspondingPortal.forward);
+            } else {
+                ConfigureClone(visualClones[i], 0, 0, false, Vector3.zero, Vector3.zero); 
             }
         }
         UpdateVisualClones();
@@ -138,6 +153,22 @@ public class PortalObject : MonoBehaviour
             }
         }
     }
+    
+    void EnterPortal(int portalIndex) {
+        inPortal = true;
+        if (visualClones != null) {
+            ConfigureClone(visualClones[portalIndex], 0, 0, false, Vector3.zero, Vector3.zero); 
+        }
+    }
+    void ExitPortal(int portalIndex) {
+        inPortal = false;
+        if (visualClones != null) {
+            int layer = LayerMask.NameToLayer("Portal" + (portalIndex + 1).ToString() + "LightMask");
+            ConfigureClone(visualClones[portalIndex], layer, portalIndex + 1, true,
+                    portalManager.portals[portalIndex].GetComponent<CorrespondingPortal>().correspondingPortal.position,
+                    -portalManager.portals[portalIndex].GetComponent<CorrespondingPortal>().correspondingPortal.forward);
+        }
+    }
 
     // Update is called once per frame
     void Update()
@@ -156,10 +187,12 @@ public class PortalObject : MonoBehaviour
                 m.SetInt("_StencilMask", stencilMask);
                 m.SetInt("_StencilComp", changeStencilComp ? 3 : 8);
                 
-                m.SetVector("_PlanePos", new Vector4(
-                            planePos.x, planePos.y, planePos.z, 1.0f));
-                m.SetVector("_PlaneDir", new Vector4(
-                            planeDir.x, planeDir.y, planeDir.z, 1.0f));
+                if (planePos != null)
+                    m.SetVector("_PlanePos", new Vector4(
+                                planePos.x, planePos.y, planePos.z, 1.0f));
+                if (planeDir != null)
+                    m.SetVector("_PlaneDir", new Vector4(
+                                planeDir.x, planeDir.y, planeDir.z, 1.0f));
                 
                 //So the object isn't masked by the depth mask
                 m.renderQueue = 2000;

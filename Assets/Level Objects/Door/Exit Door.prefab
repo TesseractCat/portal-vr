@@ -1,21 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7806185735708227363
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4928092381485806408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c704a94743849f438dc09c46b6791ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  channel: -1
-  leftSide: {fileID: 5074513074718384691}
-  rightSide: {fileID: 432140544336649806}
-  openSpeed: 5
 --- !u!1 &2501405707977027316
 GameObject:
   m_ObjectHideFlags: 0
@@ -112,6 +96,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &-7806185735708227363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4928092381485806408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c704a94743849f438dc09c46b6791ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  channel: -1
+  leftSide: {fileID: 5074513074718384691}
+  rightSide: {fileID: 432140544336649806}
+  openSpeed: 5
 --- !u!1 &8749087324267911508
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,7 +265,8 @@ PrefabInstance:
         type: 3}
       propertyPath: visualsPrefab
       value: 
-      objectReference: {fileID: 4928092381485806408}
+      objectReference: {fileID: 6283575294280780983, guid: 5730aeb0161974a4b80732158406da8c,
+        type: 3}
     m_RemovedComponents:
     - {fileID: -479539277119717158, guid: 210819e16d5325043b08aaf3ebb848fb, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 210819e16d5325043b08aaf3ebb848fb, type: 3}

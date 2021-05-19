@@ -14,7 +14,7 @@ public class PlacedObject {
     
     public JsonQuaternion rotation;
     
-    public Dictionary<string, object> properties;
+    public Dictionary<string, object> properties = new Dictionary<string, object>();
     
     public int connection = -1;
 }
@@ -28,6 +28,7 @@ public class VoxelEditor : MonoBehaviour
     public ProcLevelMesh levelMesh;
     public SaveLoadHandler saveLoadHandler;
     public GUISkin guiSkin;
+    public GUISkin guiSkinSmall;
     
     Vector3Int? leftHandle;
     Vector3Int? rightHandle;
@@ -41,6 +42,8 @@ public class VoxelEditor : MonoBehaviour
     Level currentLevel;
     
     bool selectMode;
+    
+    float rotation = 0;
     
     void Awake() {
         currentLevel = new Level();
@@ -87,6 +90,8 @@ public class VoxelEditor : MonoBehaviour
                     selectedObjectPreview.transform.position =
                         levelMesh.transform.TransformPoint(point.Value + hit.normal/2.0f);
                     selectedObjectPreview.transform.rotation = Quaternion.LookRotation(hit.normal, Vector3.up);
+                    if (selectedObject.rotatable)
+                        selectedObjectPreview.transform.RotateAround(selectedObjectPreview.transform.position, hit.normal, rotation);
                     
                     //Placing object
                     if (mouse.leftButton.wasPressedThisFrame) {
@@ -105,6 +110,12 @@ public class VoxelEditor : MonoBehaviour
                         toPlace.normal = hit.normal;
                         toPlace.rotation = selectedObjectPreview.transform.GetChild(0).rotation;
                         
+                        //Update properties
+                        if (selectedObject.objectPrefab.GetComponentInChildren<Activator>())
+                            toPlace.properties = selectedObject.objectPrefab.GetComponentInChildren<Activator>().properties;
+                        if (selectedObject.objectPrefab.GetComponentInChildren<Activatable>())
+                            toPlace.properties = selectedObject.objectPrefab.GetComponentInChildren<Activatable>().properties;
+                        
                         currentLevel.levelObjects.Add(
                                 new KeyValuePair<JsonVector3Int, PlacedObject>(
                                     (point.Value + hit.normal).RoundToInt(), toPlace));
@@ -119,6 +130,18 @@ public class VoxelEditor : MonoBehaviour
                 }
             } else {
                 selectedObjectPreview.transform.position = new Vector3(1000,1000,1000);
+            }
+            
+            if (GUIUtility.keyboardControl == 0) {
+                if (keyboard.eKey.wasPressedThisFrame) {
+                    rotation += 90;
+                    if (rotation > 360)
+                        rotation = 90;
+                } else if (keyboard.qKey.wasPressedThisFrame) {
+                    rotation -= 90;
+                    if (rotation < 0)
+                        rotation = 360 - 90;
+                }
             }
             return;
         }
@@ -175,7 +198,7 @@ public class VoxelEditor : MonoBehaviour
                 });
                 
                 levelMesh.Generate();
-            } else if (keyboard.eKey.wasPressedThisFrame) {
+            } else if (keyboard.cKey.wasPressedThisFrame) {
                 IterateThroughHandles(leftHandle.Value, rightHandle.Value, (x,y,z) => {
                         //Toggle
                         if (levelMesh.levelArr[x, y, z] == 1) {
@@ -260,6 +283,8 @@ public class VoxelEditor : MonoBehaviour
         tempObject.transform.parent = selectedObjectPreview.transform;
         tempObject.transform.localRotation = Quaternion.AngleAxis(90, Vector3.right);
         
+        rotation = 0;
+        
         ResetHandles();
     }
     
@@ -288,13 +313,14 @@ public class VoxelEditor : MonoBehaviour
         
         if (selectMode && highlightedObject != null) {
             Vector2 highlightedObjectGUIPosition = ScreenToGUIPoint(Camera.main.WorldToScreenPoint(highlightedObject.position));
-            GUILayout.Window(1, new Rect(highlightedObjectGUIPosition.x, highlightedObjectGUIPosition.y, 125, 100), OnProperties, "Properties");
+            GUILayout.Window(1, new Rect(highlightedObjectGUIPosition.x, highlightedObjectGUIPosition.y, 125, 1), OnProperties, "Properties");
         }
     }
     
     bool PointInGUI(Vector2 screenPoint) {
-        //Vector2 guiPoint = GUIUtility.ScreenToGUIPoint(screenPoint);
-        //Debug.Log("Screen: " + screenPoint + ", GUI: " + guiPoint);
+        if (selectMode && highlightedObject != null) {
+            //TODO: Check for selection window
+        }
         return objectPaletteRect.Contains(ScreenToGUIPoint(screenPoint));
     }
     
@@ -310,14 +336,45 @@ public class VoxelEditor : MonoBehaviour
             }
         }
         
+        //Custom per-object properties
+        Dictionary<string, object> properties = currentLevel.levelObjects[levelObjectIdx].Value.properties;
+        foreach (string k in new List<string>(properties.Keys)) {
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(k, guiSkinSmall.label);
+            if (properties[k] is Int64) {
+                string outText = GUILayout.TextField(((Int64)properties[k]).ToString(), guiSkinSmall.textField);
+                Int64 outNum;
+                if (Int64.TryParse(outText, out outNum)) {
+                    properties[k] = outNum;
+                }
+            }
+            if (properties[k] is bool) {
+                if (GUILayout.Button(((bool)properties[k]).ToString(), guiSkinSmall.button))
+                    properties[k] = !(bool)properties[k];
+            }
+            GUILayout.EndHorizontal();
+        }
+        
+        //Connectable properties
         if (highlightedScriptableObject.connectable) {
+            GUILayout.BeginHorizontal();
             if (GUILayout.Button("Channel [" + currentLevel.levelObjects[levelObjectIdx].Value.connection.ToString() + "]")) {
                 currentLevel.levelObjects[levelObjectIdx].Value.connection += 1;
                 if (currentLevel.levelObjects[levelObjectIdx].Value.connection > saveLoadHandler.connectionChannels) {
                     currentLevel.levelObjects[levelObjectIdx].Value.connection = -1;
                 }
             }
+            if (GUILayout.Button("-")) {
+                currentLevel.levelObjects[levelObjectIdx].Value.connection -= 1;
+                if (currentLevel.levelObjects[levelObjectIdx].Value.connection < -1) {
+                    currentLevel.levelObjects[levelObjectIdx].Value.connection = -1;
+                }
+            }
+            GUILayout.EndHorizontal();
         }
+        
+        //Delete
+        GUILayout.BeginHorizontal();
         if (GUILayout.Button("Delete")) {
             GameObject.Destroy(highlightedObject.gameObject);
             currentLevel.levelObjects.RemoveAt(levelObjectIdx);
@@ -326,6 +383,11 @@ public class VoxelEditor : MonoBehaviour
                 levelMesh.Generate();
             }
         }
+        
+        if (GUILayout.Button("Close")) {
+            highlightedObject = null;
+        }
+        GUILayout.EndHorizontal();
     }
     
     int GetLevelObjectAtPosition(Vector3 position) {

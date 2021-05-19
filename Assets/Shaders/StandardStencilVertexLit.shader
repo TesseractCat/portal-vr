@@ -46,6 +46,8 @@ Shader "CustomStandard/StandardStencilVertexLit" {
         
             float3 _PlanePos;
             float3 _PlaneDir;
+            
+            float _FizzleTime = -1;
      
             struct v2f {
                 float4 pos : SV_POSITION;
@@ -98,8 +100,12 @@ Shader "CustomStandard/StandardStencilVertexLit" {
                 fixed4 mainTex = tex2D (_MainTex, i.uv_MainTex);
      
                 c.rgb = (mainTex.rgb * i.diff + i.spec);
+                
+                if (_FizzleTime > 0) {
+                    c.rgb *= fixed3(1,1,1) * (1 - saturate(_Time.y - _FizzleTime));
+                }
      
-                c.a = 1;
+                clip(mainTex.a - 0.9);
      
                 return c;
             }
