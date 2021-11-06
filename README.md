@@ -20,3 +20,7 @@ If you have another headset and can get it running, please submit a PR :).
 - Grabbing objects is buggy
 - Portal physics is buggy
 - Performance needs work
+
+## GIF
+
+![](preview.gif)
